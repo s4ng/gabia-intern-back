@@ -1,4 +1,6 @@
 package com.gmarket.api.domain.notice_board;
 
-public interface NoticeBoardRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface NoticeBoardRepository extends CrudRepository {
 }
