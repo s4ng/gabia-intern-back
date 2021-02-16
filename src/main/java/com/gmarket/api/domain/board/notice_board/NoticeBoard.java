@@ -1,24 +1,18 @@
-/**
- * Todo
- * TimeStamp 타입 바꾸기
- * 변수명 바꾸기
- */
 package com.gmarket.api.domain.board.notice_board;
 
-import com.sun.istack.NotNull;
-import lombok.CustomLog;
-import lombok.Getter;
-import lombok.Setter;
+import com.gmarket.api.domain.board.BoardStatus;
+import com.gmarket.api.global.util.BaseTimeEntity;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="notice_board")
-public class NoticeBoard {
+public class NoticeBoard extends BaseTimeEntity {
 
-    public enum Status { CREATE, CLOSE, DELETE }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,37 +20,34 @@ public class NoticeBoard {
 
     @Setter
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private BoardStatus status;
 
     @Setter
+    @Column(nullable = false)
     private String title;
 
-    @Setter
+    @Column(nullable = false)
     private String author;
 
     @Setter
-    @Column(columnDefinition= "TEXT", nullable = false)
+    @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String content;
 
-    @Column(name="user_id")
-    @Setter
+    @Column(name="user_id", nullable = false)
     private String userId;
-
-    @Column(name="create_time")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private LocalDateTime createTime;
-
-    @Column(name="modify_time")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private LocalDateTime modifyTime;
 
     @Setter
     @Column(name="delete_time")
-    private LocalDateTime deleteTime;
+    private LocalDateTime deletedTime;
 
-    @Setter
     private int hit;
 
-    public NoticeBoard() {
+    @Builder
+    public NoticeBoard(BoardStatus status, String title, String author, String content, String userId) {
+        this.status = status;
+        this.title = title;
+        this.author = author;
+        this.content = content;
+        this.userId = userId;
     }
 }

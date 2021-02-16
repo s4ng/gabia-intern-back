@@ -1,9 +1,9 @@
 package com.gmarket.api.domain.board.notice_board;
 
+import com.gmarket.api.domain.board.notice_board.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -17,35 +17,33 @@ public class NoticeBoardService {
         this.noticeBoardRepository = noticeBoardRepository;
     }
 
-    public NoticeBoardDto create(NoticeBoardDto noticeBoardDto) {
-        NoticeBoard noticeBoard = NoticeBoardMapper.INSTANCE.toEntity(noticeBoardDto);
-        return NoticeBoardMapper.INSTANCE.toDto(noticeBoardRepository.save(noticeBoard));
+    public NoticeBoard create(NoticeBoard noticeBoard) {
+        return (noticeBoardRepository.save(noticeBoard));
     }
 
     public Optional<NoticeBoard> getNotice(Long id) {
         return noticeBoardRepository.findById(id);
     }
 
-    public Iterable<NoticeBoardDto> getNoticeList() {
-        return NoticeBoardMapper.INSTANCE.toDto(noticeBoardRepository.findAll());
+    public Iterable<NoticeBoard> getNoticeList() {
+        return noticeBoardRepository.findAll();
     }
 
-    public NoticeBoardDto updateNotice(NoticeBoardDto noticeBoardDto, Long id) {
+    public NoticeBoard updateNotice(NoticeRequestDto noticeBoardDto, Long id) {
 
-        NoticeBoard noticeBoard = NoticeBoardMapper.INSTANCE.toEntity(noticeBoardDto);
         NoticeBoard changeBoard = noticeBoardRepository.findById(id).get();
-        changeBoard.setContent(noticeBoard.getContent());
-        changeBoard.setStatus(noticeBoard.getStatus());
-        changeBoard.setTitle(noticeBoard.getTitle());
+        changeBoard.setTitle(noticeBoardDto.getTitle());
+        changeBoard.setContent(noticeBoardDto.getContent());
+        changeBoard.setStatus(noticeBoardDto.getStatus());
 
-        return NoticeBoardMapper.INSTANCE.toDto(noticeBoardRepository.save(changeBoard));
+        return changeBoard;
     }
 
-    public NoticeBoardDto deleteNotice(Long id) {
+    public NoticeBoard deleteNotice(Long id) {
 
         NoticeBoard changeBoard = noticeBoardRepository.findById(id).get();
-        changeBoard.setDeleteTime(LocalDateTime.now());
+        changeBoard.setDeletedTime(LocalDateTime.now());
 
-        return NoticeBoardMapper.INSTANCE.toDto(noticeBoardRepository.save(changeBoard));
+        return changeBoard;
     }
 }
