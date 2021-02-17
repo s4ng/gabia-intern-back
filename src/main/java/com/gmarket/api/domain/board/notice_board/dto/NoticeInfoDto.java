@@ -5,10 +5,10 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class NoticeInfoDto {
     private Long id;

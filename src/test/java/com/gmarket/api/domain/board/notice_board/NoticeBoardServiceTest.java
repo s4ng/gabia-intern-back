@@ -1,49 +1,54 @@
 package com.gmarket.api.domain.board.notice_board;
 
-import com.gmarket.api.domain.board.BoardStatus;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
-@Transactional
+import java.util.Optional;
+
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 class NoticeBoardServiceTest {
 
-    @Autowired
-    private NoticeBoardService noticeBoardService;
+    @InjectMocks
+    NoticeBoardService noticeBoardService;
 
-    NoticeBoard testPost = NoticeBoard.builder()
-            .status(BoardStatus.CREATE)
-            .content("test content")
-            .title("test title")
-            .author("test author")
-            .userId("1a")
-            .build();
+    @Mock
+    NoticeBoardRepository noticeBoardRepository;
 
-//    @BeforeEach
-//    void 초기화() {
-//        result = noticeBoardRepository.save(noticeBoard);
+//    private NoticeRequestDto noticeRequestDto = NoticeRequestDto.builder()
+//            .status(BoardStatus.CREATE)
+//            .title("test title")
+//            .content("test content")
+//            .userId("test userId")
+//            .author("test author")
+//            .build();
+//
+//    @Test
+//    void 글_저장() {
+//        when(noticeBoardRepository.save(noticeBoard)).thenReturn(noticeBoard);
+//        noticeBoardService.create(noticeRequestDto);
+//        verify(noticeBoardRepository, times(1)).save(noticeBoard);
 //    }
 
     @Test
-    void 글_저장() {
-//        NoticeBoard result = noticeBoardService.create(testPost);
-//        assert(result.getTitle()).equals("test title");
-    }
-
-    @Test
     void 글_하나_조회() {
+        Optional<NoticeBoard> noticeBoardOptional = Optional.empty();
+        when(noticeBoardRepository.findById(1L)).thenReturn(noticeBoardOptional);
+        noticeBoardService.getNoticeById(1L);
+        verify(noticeBoardRepository).findById(1L);
     }
 
     @Test
     void 글_리스트_조회() {
-    }
-
-    @Test
-    void 글_수정() {
-    }
-
-    @Test
-    void 글_삭제() {
+        Page<NoticeBoard> noticeBoardList = Page.empty();
+        when(noticeBoardRepository.findAll(PageRequest.of(0, 20))).thenReturn(noticeBoardList);
+        noticeBoardService.getNoticePage(1);
+        verify(noticeBoardRepository).findAll(PageRequest.of(0, 20));
     }
 }

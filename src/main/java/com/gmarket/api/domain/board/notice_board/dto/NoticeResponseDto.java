@@ -3,10 +3,10 @@ package com.gmarket.api.domain.board.notice_board.dto;
 import com.gmarket.api.domain.board.BoardStatus;
 import lombok.*;
 
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class NoticeResponseDto {
     private Long id;

@@ -2,48 +2,53 @@ package com.gmarket.api.domain.board.notice_board;
 
 import com.gmarket.api.domain.board.notice_board.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class NoticeBoardService {
 
     private final NoticeBoardRepository noticeBoardRepository;
 
-    @Autowired
     public NoticeBoardService(NoticeBoardRepository noticeBoardRepository) {
         this.noticeBoardRepository = noticeBoardRepository;
     }
 
-    public NoticeBoard create(NoticeBoard noticeBoard) {
-        return (noticeBoardRepository.save(noticeBoard));
+    public NoticeResponseDto create(NoticeRequestDto noticeRequestDto) {
+        NoticeBoard noticeBoard = NoticeMapper.INSTANCE.noticeRequestDtoToNoticeBoard(noticeRequestDto);
+        return NoticeMapper.INSTANCE.noticeBoardToNoticeResponseDto(noticeBoardRepository.save(noticeBoard));
     }
 
-    public Optional<NoticeBoard> getNotice(Long id) {
-        return noticeBoardRepository.findById(id);
+    public Iterable<NoticeInfoDto> getNoticePage(int page) {
+
+        List<NoticeInfoDto> list = new ArrayList<>();
+
+        noticeBoardRepository.findAll(PageRequest.of(page - 1, 20)).forEach(entity -> {
+            list.add(NoticeMapper.INSTANCE.noticeBoardToNoticeInfoDto(entity));
+        });
+
+        return list;
     }
 
-    public Iterable<NoticeBoard> getNoticeList() {
-        return noticeBoardRepository.findAll();
+    public NoticeInfoDto getNoticeById(Long id) {
+        NoticeBoard noticeBoard = noticeBoardRepository.findById(id).orElse(null);
+        return NoticeMapper.INSTANCE.noticeBoardToNoticeInfoDto(noticeBoard);
     }
 
-    public NoticeBoard updateNotice(NoticeRequestDto noticeBoardDto, Long id) {
+    public NoticeResponseDto updateNotice(NoticeRequestDto noticeRequestDto, Long id) {
 
-        NoticeBoard changeBoard = noticeBoardRepository.findById(id).get();
-        changeBoard.setTitle(noticeBoardDto.getTitle());
-        changeBoard.setContent(noticeBoardDto.getContent());
-        changeBoard.setStatus(noticeBoardDto.getStatus());
-
-        return changeBoard;
+        NoticeBoard changeBoard = noticeBoardRepository.findById(id).orElse(null);
+        changeBoard.update(noticeRequestDto);
+        return NoticeMapper.INSTANCE.noticeBoardToNoticeResponseDto(noticeBoardRepository.save(changeBoard));
     }
 
-    public NoticeBoard deleteNotice(Long id) {
+    public NoticeResponseDto deleteNotice(Long id) {
 
-        NoticeBoard changeBoard = noticeBoardRepository.findById(id).get();
-        changeBoard.setDeletedTime(LocalDateTime.now());
-
-        return changeBoard;
+        NoticeBoard changeBoard = noticeBoardRepository.findById(id).orElse(null);
+        changeBoard.delete();
+        return NoticeMapper.INSTANCE.noticeBoardToNoticeResponseDto(noticeBoardRepository.save(changeBoard));
     }
 }
