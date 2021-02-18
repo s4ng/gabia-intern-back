@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ResponseDto {
-    Object result;
+public class ResponseWrapperDto {
+    private Object data;
 
     @Builder
-    ResponseDto(Object result) {
-        this.result = result;
+    ResponseWrapperDto(Object data) {
+        this.data = data;
     }
 }

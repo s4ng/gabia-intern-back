@@ -1,8 +1,11 @@
 package com.gmarket.api.domain.board.notice_board;
 
 import com.gmarket.api.domain.board.notice_board.dto.*;
-import com.gmarket.api.global.util.ResponseDto;
+import com.gmarket.api.global.util.ResponseWrapperDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping(value="boards/notice/posts")
@@ -15,28 +18,47 @@ public class NoticeBoardController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseDto create(@RequestBody NoticeRequestDto noticeRequestDto) {
-        NoticeResponseDto saveResult = noticeBoardService.create(noticeRequestDto);
-        return ResponseDto.builder().result(saveResult).build();
+    public ResponseEntity<ResponseWrapperDto> create(@RequestBody NoticeRequestDto noticeRequestDto) {
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data(noticeBoardService.create(noticeRequestDto))
+                .build();
+
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseDto list(@RequestParam(value = "page", required = false, defaultValue = "1") int page){
-        return ResponseDto.builder().result(noticeBoardService.getNoticePage(page)).build();
+    public ResponseEntity<ResponseWrapperDto> list(@RequestParam(value = "page", required = false, defaultValue = "1") int page){
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data(noticeBoardService.getNoticePage(page))
+                .build();
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseDto findOne(@PathVariable Long id) {
-        return ResponseDto.builder().result(noticeBoardService.getNoticeById(id)).build();
+    public ResponseEntity<ResponseWrapperDto> findOne(@PathVariable Long id) {
+        NoticeInfoDto findResult = noticeBoardService.getNoticeById(id);
+        if(findResult == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else {
+            ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                    .data(findResult)
+                    .build();
+            return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
+        }
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseDto update(@RequestBody NoticeRequestDto noticeBoardDto, @PathVariable Long id) {
-        return ResponseDto.builder().result(noticeBoardService.updateNotice(noticeBoardDto, id)).build();
+    public ResponseEntity<ResponseWrapperDto> update(@RequestBody NoticeRequestDto noticeBoardDto,
+                                                    @PathVariable Long id) {
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data(noticeBoardService.updateNotice(noticeBoardDto, id))
+                .build();
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseDto delete(@PathVariable Long id) {
-        return ResponseDto.builder().result(noticeBoardService.deleteNotice(id)).build();
+    public ResponseEntity<NoticeResponseDto> delete(@PathVariable Long id) {
+        return new ResponseEntity<>(noticeBoardService.deleteNotice(id), HttpStatus.NO_CONTENT);
     }
 }

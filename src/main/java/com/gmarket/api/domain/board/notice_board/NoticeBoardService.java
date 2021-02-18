@@ -1,7 +1,6 @@
 package com.gmarket.api.domain.board.notice_board;
 
 import com.gmarket.api.domain.board.notice_board.dto.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +34,11 @@ public class NoticeBoardService {
 
     public NoticeInfoDto getNoticeById(Long id) {
         NoticeBoard noticeBoard = noticeBoardRepository.findById(id).orElse(null);
+
+        if(noticeBoard != null && noticeBoard.getDeletedTime() != null){
+            return null;
+        }
+
         return NoticeMapper.INSTANCE.noticeBoardToNoticeInfoDto(noticeBoard);
     }
 
