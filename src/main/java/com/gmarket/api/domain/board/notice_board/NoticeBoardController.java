@@ -51,14 +51,24 @@ public class NoticeBoardController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<ResponseWrapperDto> update(@RequestBody NoticeRequestDto noticeBoardDto,
                                                     @PathVariable Long id) {
-        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
-                .data(noticeBoardService.updateNotice(noticeBoardDto, id))
-                .build();
-        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
+        NoticeResponseDto noticeResponseDto = noticeBoardService.updateNotice(noticeBoardDto, id);
+        if(noticeBoardDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                    .data(noticeResponseDto)
+                    .build();
+            return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<NoticeResponseDto> delete(@PathVariable Long id) {
-        return new ResponseEntity<>(noticeBoardService.deleteNotice(id), HttpStatus.NO_CONTENT);
+        NoticeResponseDto noticeResponseDto = noticeBoardService.deleteNotice(id);
+        if(noticeResponseDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(noticeResponseDto, HttpStatus.NO_CONTENT);
+        }
     }
 }

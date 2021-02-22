@@ -45,14 +45,22 @@ public class NoticeBoardService {
     public NoticeResponseDto updateNotice(NoticeRequestDto noticeRequestDto, Long id) {
 
         NoticeBoard changeBoard = noticeBoardRepository.findById(id).orElse(null);
-        changeBoard.update(noticeRequestDto);
-        return NoticeMapper.INSTANCE.noticeBoardToNoticeResponseDto(noticeBoardRepository.save(changeBoard));
+        if(changeBoard == null) {
+            return null;
+        } else {
+            changeBoard.update(noticeRequestDto);
+            return NoticeMapper.INSTANCE.noticeBoardToNoticeResponseDto(noticeBoardRepository.save(changeBoard));
+        }
     }
 
     public NoticeResponseDto deleteNotice(Long id) {
 
         NoticeBoard changeBoard = noticeBoardRepository.findById(id).orElse(null);
-        changeBoard.delete();
-        return NoticeMapper.INSTANCE.noticeBoardToNoticeResponseDto(noticeBoardRepository.save(changeBoard));
+        if(changeBoard == null) {
+            return null;
+        } else {
+            changeBoard.delete();
+            return NoticeMapper.INSTANCE.noticeBoardToNoticeResponseDto(noticeBoardRepository.save(changeBoard));
+        }
     }
 }
