@@ -13,8 +13,18 @@ public interface NoticeMapper {
 
     NoticeBoard noticeRequestDtoToNoticeBoard(NoticeRequestDto noticeRequestDto);
 
-    @InheritInverseConfiguration
-    NoticeResponseDto noticeBoardToNoticeResponseDto(NoticeBoard noticeBoard);
+    default NoticeResponseDto noticeBoardToNoticeResponseDto(NoticeBoard noticeBoard) {
+        NoticeResponseDto responseDto = NoticeResponseDto.builder()
+                .boardId(noticeBoard.getBoardId())
+                .status(noticeBoard.getStatus())
+                .title(noticeBoard.getTitle())
+                .description(noticeBoard.getDescription())
+                .noticeCategory(noticeBoard.getNoticeCategory())
+                .userId(noticeBoard.getUser().getUserId())
+                .build();
+
+        return responseDto;
+    }
 
     @InheritInverseConfiguration
     NoticeInfoDto noticeBoardToNoticeInfoDto(NoticeBoard noticeBoard);

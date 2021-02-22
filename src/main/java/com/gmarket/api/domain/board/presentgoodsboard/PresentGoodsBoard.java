@@ -20,11 +20,11 @@ public class PresentGoodsBoard extends Board {
 
     private LocalDateTime raffleCloseAt;
 
-    enum GoodsCategory {
+    public enum GoodsCategory {
         DIGITAL, TICKET
     }
 
-    enum GoodsStatus {
+    public enum GoodsStatus {
         NEW, ALMOST, USED
     }
 }

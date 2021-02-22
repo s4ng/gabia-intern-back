@@ -16,5 +16,5 @@ public class NoticeResponseDto {
     private String title;
     private String description;
     private NoticeBoard.NoticeCategory noticeCategory;
-    private User user;
+    private Long userId;
 }

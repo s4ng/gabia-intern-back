@@ -1,10 +1,14 @@
-package com.gmarket.api.domain.board.noticeboard;
+package com.gmarket.api.domain.board.presentgoodsboard;
 
 import com.gmarket.api.domain.board.Board;
+import com.gmarket.api.domain.board.noticeboard.NoticeBoard;
 import com.gmarket.api.domain.board.noticeboard.dto.NoticeInfoDto;
 import com.gmarket.api.domain.board.noticeboard.dto.NoticeMapper;
-import com.gmarket.api.domain.board.noticeboard.dto.NoticeRequestDto;
 import com.gmarket.api.domain.board.noticeboard.dto.NoticeResponseDto;
+import com.gmarket.api.domain.board.presentgoodsboard.dto.PresentGoodsBoardInfoDto;
+import com.gmarket.api.domain.board.presentgoodsboard.dto.PresentGoodsBoardMapper;
+import com.gmarket.api.domain.board.presentgoodsboard.dto.PresentGoodsBoardRequestDto;
+import com.gmarket.api.domain.board.presentgoodsboard.dto.PresentGoodsBoardResponseDto;
 import com.gmarket.api.domain.user.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -13,24 +17,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class NoticeBoardService {
+public class PresentGoodsBoardService {
 
-    private final NoticeBoardRepository noticeBoardRepository;
+    private final PresentGoodsBoardRepository presentGoodsBoardRepository;
     private final UserRepository userRepository;
 
-    public NoticeBoardService(NoticeBoardRepository noticeBoardRepository, UserRepository userRepository) {
-        this.noticeBoardRepository = noticeBoardRepository;
+    public PresentGoodsBoardService(PresentGoodsBoardRepository presentGoodsBoardRepository,
+                                    UserRepository userRepository) {
+        this.presentGoodsBoardRepository = presentGoodsBoardRepository;
         this.userRepository = userRepository;
     }
 
-    public NoticeResponseDto create(NoticeRequestDto noticeRequestDto) {
-        NoticeBoard noticeBoard = NoticeMapper.INSTANCE.noticeRequestDtoToNoticeBoard(noticeRequestDto);
-        Long userId = noticeRequestDto.getUserId();
-        noticeBoard.setUser(userRepository.getOne(userId));
-        return NoticeMapper.INSTANCE.noticeBoardToNoticeResponseDto(noticeBoardRepository.save(noticeBoard));
+    public PresentGoodsBoardResponseDto create(PresentGoodsBoardRequestDto presentGoodsRequestDto) {
+        PresentGoodsBoard presentGoodsBoard =
+                PresentGoodsBoardMapper.INSTANCE.presentGoodsRequestDtotoToEntity(presentGoodsRequestDto);
+        Long userId = presentGoodsRequestDto.getUserId();
+        presentGoodsBoard.setUser(userRepository.getOne(userId));
+        return PresentGoodsBoardMapper.INSTANCE.entityToPresentGoodsBoardResponseDto(presentGoodsBoardRepository.save(presentGoodsBoard));
     }
 
-    public Iterable<NoticeInfoDto> getNoticePage(int page) {
+    public Iterable<PresentGoodsBoardInfoDto> getNoticePage(int page) {
 
         List<NoticeInfoDto> list = new ArrayList<>();
 
@@ -52,7 +58,7 @@ public class NoticeBoardService {
         return entityToNoticeInfoDto(noticeBoard);
     }
 
-    public NoticeResponseDto updateNotice(NoticeRequestDto noticeRequestDto, Long id) {
+    public NoticeResponseDto updateNotice(PresentGoodsBoardRequestDto noticeRequestDto, Long id) {
 
         NoticeBoard changeBoard = noticeBoardRepository.findById(id).orElse(null);
         if(changeBoard == null) {

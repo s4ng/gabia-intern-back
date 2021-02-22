@@ -1,7 +1,5 @@
 package com.gmarket.api.domain.board;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.gmarket.api.domain.board.noticeboard.dto.NoticeRequestDto;
 import com.gmarket.api.domain.user.User;
 import com.gmarket.api.global.util.BaseTimeEntity;
@@ -49,4 +47,8 @@ public class Board extends BaseTimeEntity {
         this.status = Status.DELETE;
     }
 
+    public void addViewCount() {
+        this.viewCount += 1;
     }
+
+}
