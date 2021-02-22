@@ -1,7 +1,11 @@
-package com.gmarket.api.domain.board.notice_board;
+package com.gmarket.api.domain.board.noticeboard;
 
-import com.gmarket.api.domain.board.notice_board.dto.*;
+import com.gmarket.api.domain.board.noticeboard.dto.NoticeInfoDto;
+import com.gmarket.api.domain.board.noticeboard.dto.NoticeRequestDto;
+import com.gmarket.api.domain.board.noticeboard.dto.NoticeResponseDto;
+import com.gmarket.api.domain.user.UserRepository;
 import com.gmarket.api.global.util.ResponseWrapperDto;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +31,9 @@ public class NoticeBoardController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseWrapperDto> list(@RequestParam(value = "page", required = false, defaultValue = "1") int page){
+    public ResponseEntity<ResponseWrapperDto> list(
+            @RequestParam(value = "page", required = false,
+            defaultValue = "1") int page) {
         ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
                 .data(noticeBoardService.getNoticePage(page))
                 .build();

@@ -5,6 +5,8 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,4 +30,5 @@ public class Alert {
     enum AlertType {
         KEYWORD, RAFFLE
     }
+
 }

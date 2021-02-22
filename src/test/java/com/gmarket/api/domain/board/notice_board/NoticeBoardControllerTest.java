@@ -1,9 +1,12 @@
 package com.gmarket.api.domain.board.notice_board;
 
+import com.gmarket.api.domain.board.Board;
 import com.gmarket.api.domain.board.BoardStatus;
-import com.gmarket.api.domain.board.notice_board.dto.NoticeInfoDto;
-import com.gmarket.api.domain.board.notice_board.dto.NoticeRequestDto;
-import com.gmarket.api.domain.board.notice_board.dto.NoticeResponseDto;
+import com.gmarket.api.domain.board.noticeboard.NoticeBoardController;
+import com.gmarket.api.domain.board.noticeboard.NoticeBoardService;
+import com.gmarket.api.domain.board.noticeboard.dto.NoticeInfoDto;
+import com.gmarket.api.domain.board.noticeboard.dto.NoticeRequestDto;
+import com.gmarket.api.domain.board.noticeboard.dto.NoticeResponseDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,20 +28,18 @@ class NoticeBoardControllerTest {
     NoticeBoardService noticeBoardService;
 
     private NoticeRequestDto noticeRequestDto = NoticeRequestDto.builder()
-            .status(BoardStatus.CREATE)
+            .status(Board.Status.CREATE)
             .title("test title")
-            .content("test content")
-            .userId("test userId")
-            .author("test author")
+            .description("test content")
+            .writeId("test userId")
             .build();
 
     private NoticeResponseDto noticeResponseDto = NoticeResponseDto.builder()
-            .id(1L)
-            .status(BoardStatus.CREATE)
+            .boardId(1L)
+            .status(Board.Status.CREATE)
             .title("test title")
-            .content("test content")
-            .userId("test userId")
-            .author("test author")
+            .description("test content")
+            .writeId("test userId")
             .build();
 
 

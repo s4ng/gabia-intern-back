@@ -1,8 +1,8 @@
-package com.gmarket.api.domain.board.notice_board.dto;
+package com.gmarket.api.domain.board.noticeboard.dto;
 
-import com.gmarket.api.domain.board.notice_board.NoticeBoard;
-import org.mapstruct.Mapper;
-import org.mapstruct.ObjectFactory;
+import com.gmarket.api.domain.board.Board;
+import com.gmarket.api.domain.board.noticeboard.NoticeBoard;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 
@@ -13,9 +13,9 @@ public interface NoticeMapper {
 
     NoticeBoard noticeRequestDtoToNoticeBoard(NoticeRequestDto noticeRequestDto);
 
-    @ObjectFactory
+    @InheritInverseConfiguration
     NoticeResponseDto noticeBoardToNoticeResponseDto(NoticeBoard noticeBoard);
 
-    @ObjectFactory
+    @InheritInverseConfiguration
     NoticeInfoDto noticeBoardToNoticeInfoDto(NoticeBoard noticeBoard);
 }

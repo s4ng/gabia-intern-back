@@ -1,5 +1,8 @@
 package com.gmarket.api.domain.board.notice_board;
 
+import com.gmarket.api.domain.board.noticeboard.NoticeBoard;
+import com.gmarket.api.domain.board.noticeboard.NoticeBoardRepository;
+import com.gmarket.api.domain.board.noticeboard.NoticeBoardService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
