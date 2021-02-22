@@ -1,26 +1,26 @@
 package com.gmarket.api.domain.board.notice_board;
 
-        import com.gmarket.api.domain.board.BoardStatus;
-        import com.gmarket.api.domain.board.notice_board.dto.NoticeInfoDto;
-        import com.gmarket.api.domain.board.notice_board.dto.NoticeRequestDto;
-        import com.gmarket.api.domain.board.notice_board.dto.NoticeResponseDto;
-        import org.junit.jupiter.api.Test;
-        import org.junit.jupiter.api.extension.ExtendWith;
-        import org.mockito.InjectMocks;
-        import org.mockito.Mock;
-        import org.mockito.Mockito;
-        import org.mockito.junit.jupiter.MockitoExtension;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-        import org.springframework.http.MediaType;
-        import org.springframework.test.web.servlet.MockMvc;
+import com.gmarket.api.domain.board.BoardStatus;
+import com.gmarket.api.domain.board.notice_board.dto.NoticeInfoDto;
+import com.gmarket.api.domain.board.notice_board.dto.NoticeRequestDto;
+import com.gmarket.api.domain.board.notice_board.dto.NoticeResponseDto;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
-        import static org.mockito.Mockito.*;
-        import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-        import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class NoticeBoardControllerTest {
