@@ -20,10 +20,17 @@ public class PresentGoodsBoardController {
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<ResponseWrapperDto> create(@RequestBody PresentGoodsBoardRequestDto presentGoodsRequestDto) {
-        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
-                .data(presentGoodsBoardService.create(presentGoodsRequestDto))
-                .build();
+        
+        PresentGoodsBoardResponseDto responseDto = presentGoodsBoardService.create(presentGoodsRequestDto);
+        
+        if(responseDto == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data(responseDto)
+                .build();
+        
         return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
     }
 

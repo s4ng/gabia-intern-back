@@ -27,7 +27,11 @@ public class PresentGoodsBoardService {
 
     public PresentGoodsBoardResponseDto create(PresentGoodsBoardRequestDto presentGoodsRequestDto) {
         Long userId = presentGoodsRequestDto.getUserId();
-        User user = userRepository.getOne(userId);
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) {
+            return null;
+        }
+
         PresentGoodsBoard presentGoodsBoard =
                 PresentGoodsBoardMapper.INSTANCE.requestDtoToEntity(presentGoodsRequestDto);
         presentGoodsBoard.setRaffleCloseAt(presentGoodsRequestDto);
