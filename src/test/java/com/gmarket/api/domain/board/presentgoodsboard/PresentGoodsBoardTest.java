@@ -90,6 +90,8 @@ class PresentGoodsBoardTest {
                 .log().all()
                 .extract().response();
 
+        JsonPath jsonPath = res.jsonPath();
+        insertedDataId = ((Number)jsonPath.get("data.boardId")).longValue();
     }
 
     @Test
