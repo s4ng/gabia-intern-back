@@ -11,19 +11,19 @@ public interface PresentGoodsBoardMapper {
 
     PresentGoodsBoard requestDtoToEntity(PresentGoodsBoardRequestDto requestDto);
 
-    default PresentGoodsBoardResponseDto entityToResponseDto(PresentGoodsBoard e) {
+    default PresentGoodsBoardResponseDto entityToResponseDto(PresentGoodsBoard entity) {
 
         PresentGoodsBoardResponseDto responseDto;
         responseDto = PresentGoodsBoardResponseDto.builder()
-                .boardId(e.getBoardId())
-                .goodsCategory(e.getGoodsCategory())
-                .goodsStatus(e.getGoodsStatus())
-                .status(e.getStatus())
-                .raffleCloseAt(e.getRaffleCloseAt())
-                .title(e.getTitle())
-                .description(e.getDescription())
-                .userId(e.getUser().getUserId())
-                .viewCount(e.getViewCount())
+                .boardId(entity.getBoardId())
+                .goodsCategory(entity.getGoodsCategory())
+                .goodsStatus(entity.getGoodsStatus())
+                .status(entity.getStatus())
+                .raffleCloseAt(entity.getRaffleCloseAt())
+                .title(entity.getTitle())
+                .description(entity.getDescription())
+                .userId(entity.getUser().getUserId())
+                .viewCount(entity.getViewCount())
                 .build();
 
         return responseDto;
