@@ -7,15 +7,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PresentGoodsBoardRequestDto {
     private PresentGoodsBoard.GoodsCategory goodsCategory;
     private PresentGoodsBoard.GoodsStatus goodsStatus;
-    private LocalDateTime raffleCloseAt;
+    private int raffleCloseAtYear;
+    private int raffleCloseAtMonth;
+    private int raffleCloseAtDate;
+    private int raffleCloseAtHour;
+    private int raffleCloseAtMinute;
     private Board.Status status;
     private String title;
     private String description;

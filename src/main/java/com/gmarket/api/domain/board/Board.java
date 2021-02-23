@@ -1,6 +1,5 @@
 package com.gmarket.api.domain.board;
 
-import com.gmarket.api.domain.board.noticeboard.dto.NoticeRequestDto;
 import com.gmarket.api.domain.user.User;
 import com.gmarket.api.global.util.BaseTimeEntity;
 import lombok.*;
@@ -37,10 +36,10 @@ public class Board extends BaseTimeEntity {
         CREATE,CLOSE,DELETE
     }
 
-    public void update(NoticeRequestDto noticeRequestDto) {
-        this.status = noticeRequestDto.getStatus();
-        this.title = noticeRequestDto.getTitle();
-        this.description = noticeRequestDto.getDescription();
+    public void update(Status status, String title, String description) {
+        this.status = status;
+        this.title = title;
+        this.description = description;
     }
 
     public void delete() {
@@ -49,6 +48,10 @@ public class Board extends BaseTimeEntity {
 
     public void addViewCount() {
         this.viewCount += 1;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

@@ -23,6 +23,7 @@ public class NoticeBoardController {
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<ResponseWrapperDto> create(@RequestBody NoticeRequestDto noticeRequestDto) {
+
         ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
                 .data(noticeBoardService.create(noticeRequestDto))
                 .build();
@@ -32,8 +33,8 @@ public class NoticeBoardController {
 
     @GetMapping
     public ResponseEntity<ResponseWrapperDto> list(
-            @RequestParam(value = "page", required = false,
-            defaultValue = "1") int page) {
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+
         ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
                 .data(noticeBoardService.getNoticePage(page))
                 .build();
@@ -42,6 +43,7 @@ public class NoticeBoardController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ResponseWrapperDto> findOne(@PathVariable Long id) {
+
         NoticeInfoDto findResult = noticeBoardService.getNoticeById(id);
         if(findResult == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -55,8 +57,10 @@ public class NoticeBoardController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ResponseWrapperDto> update(@RequestBody NoticeRequestDto noticeBoardDto,
-                                                    @PathVariable Long id) {
+    public ResponseEntity<ResponseWrapperDto> update(
+            @RequestBody NoticeRequestDto noticeBoardDto,
+            @PathVariable Long id) {
+
         NoticeResponseDto noticeResponseDto = noticeBoardService.updateNotice(noticeBoardDto, id);
         if(noticeBoardDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -70,6 +74,7 @@ public class NoticeBoardController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<NoticeResponseDto> delete(@PathVariable Long id) {
+
         NoticeResponseDto noticeResponseDto = noticeBoardService.deleteNotice(id);
         if(noticeResponseDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

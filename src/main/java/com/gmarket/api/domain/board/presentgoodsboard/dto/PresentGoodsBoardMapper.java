@@ -1,6 +1,5 @@
 package com.gmarket.api.domain.board.presentgoodsboard.dto;
 
-import com.gmarket.api.domain.board.noticeboard.dto.NoticeResponseDto;
 import com.gmarket.api.domain.board.presentgoodsboard.PresentGoodsBoard;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -10,16 +9,16 @@ public interface PresentGoodsBoardMapper {
 
     PresentGoodsBoardMapper INSTANCE = Mappers.getMapper(PresentGoodsBoardMapper.class);
 
-    PresentGoodsBoard presentGoodsRequestDtotoToEntity(PresentGoodsBoardRequestDto presentGoodsBoardRequestDto);
+    PresentGoodsBoard requestDtoToEntity(PresentGoodsBoardRequestDto requestDto);
 
-    PresentGoodsBoardRequestDto entityToPresentGoodsBoardRequestDto(PresentGoodsBoard presentGoodsBoard);
+    default PresentGoodsBoardResponseDto entityToResponseDto(PresentGoodsBoard e) {
 
-    default PresentGoodsBoardResponseDto entityToPresentGoodsBoardResponseDto(PresentGoodsBoard e) {
         PresentGoodsBoardResponseDto responseDto;
         responseDto = PresentGoodsBoardResponseDto.builder()
                 .boardId(e.getBoardId())
                 .goodsCategory(e.getGoodsCategory())
                 .goodsStatus(e.getGoodsStatus())
+                .status(e.getStatus())
                 .raffleCloseAt(e.getRaffleCloseAt())
                 .title(e.getTitle())
                 .description(e.getDescription())
@@ -29,4 +28,6 @@ public interface PresentGoodsBoardMapper {
 
         return responseDto;
     }
+
+    PresentGoodsBoardInfoDto entityToInfoDto(PresentGoodsBoard presentGoodsBoard);
 }

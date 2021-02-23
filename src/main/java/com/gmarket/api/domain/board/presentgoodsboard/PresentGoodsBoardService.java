@@ -1,14 +1,11 @@
 package com.gmarket.api.domain.board.presentgoodsboard;
 
 import com.gmarket.api.domain.board.Board;
-import com.gmarket.api.domain.board.noticeboard.NoticeBoard;
-import com.gmarket.api.domain.board.noticeboard.dto.NoticeInfoDto;
-import com.gmarket.api.domain.board.noticeboard.dto.NoticeMapper;
-import com.gmarket.api.domain.board.noticeboard.dto.NoticeResponseDto;
 import com.gmarket.api.domain.board.presentgoodsboard.dto.PresentGoodsBoardInfoDto;
 import com.gmarket.api.domain.board.presentgoodsboard.dto.PresentGoodsBoardMapper;
 import com.gmarket.api.domain.board.presentgoodsboard.dto.PresentGoodsBoardRequestDto;
 import com.gmarket.api.domain.board.presentgoodsboard.dto.PresentGoodsBoardResponseDto;
+import com.gmarket.api.domain.user.User;
 import com.gmarket.api.domain.user.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,63 +26,69 @@ public class PresentGoodsBoardService {
     }
 
     public PresentGoodsBoardResponseDto create(PresentGoodsBoardRequestDto presentGoodsRequestDto) {
-        PresentGoodsBoard presentGoodsBoard =
-                PresentGoodsBoardMapper.INSTANCE.presentGoodsRequestDtotoToEntity(presentGoodsRequestDto);
         Long userId = presentGoodsRequestDto.getUserId();
-        presentGoodsBoard.setUser(userRepository.getOne(userId));
-        return PresentGoodsBoardMapper.INSTANCE.entityToPresentGoodsBoardResponseDto(presentGoodsBoardRepository.save(presentGoodsBoard));
+        User user = userRepository.getOne(userId);
+        PresentGoodsBoard presentGoodsBoard =
+                PresentGoodsBoardMapper.INSTANCE.requestDtoToEntity(presentGoodsRequestDto);
+        presentGoodsBoard.setRaffleCloseAt(presentGoodsRequestDto);
+        presentGoodsBoard.setUser(user);
+        return PresentGoodsBoardMapper.INSTANCE.entityToResponseDto(presentGoodsBoardRepository.save(presentGoodsBoard));
     }
 
-    public Iterable<PresentGoodsBoardInfoDto> getNoticePage(int page) {
+    public Iterable<PresentGoodsBoardInfoDto> getPage(int page) {
 
-        List<NoticeInfoDto> list = new ArrayList<>();
+        List<PresentGoodsBoardInfoDto> list = new ArrayList<>();
 
-        noticeBoardRepository.findAll(PageRequest.of(page - 1, 20)).forEach(entity -> {
-            list.add(entityToNoticeInfoDto(entity));
-        });
+        presentGoodsBoardRepository.findAll(PageRequest.of(page - 1, 20)).forEach(entity ->
+            list.add(entityToInfoDto(entity))
+        );
 
         return list;
     }
 
-    public NoticeInfoDto getNoticeById(Long id) {
-        NoticeBoard noticeBoard = noticeBoardRepository.findById(id).orElse(null);
+    public PresentGoodsBoardInfoDto getById(Long id) {
+        PresentGoodsBoard board = presentGoodsBoardRepository.findById(id).orElse(null);
 
-        if(noticeBoard != null && noticeBoard.getStatus() == Board.Status.DELETE){
+        if(board == null || board.getStatus() == Board.Status.DELETE){
             return null;
         }
-        noticeBoard.addViewCount();
-        noticeBoardRepository.save(noticeBoard);
-        return entityToNoticeInfoDto(noticeBoard);
+        board.addViewCount();
+        presentGoodsBoardRepository.save(board);
+        return entityToInfoDto(board);
     }
 
-    public NoticeResponseDto updateNotice(PresentGoodsBoardRequestDto noticeRequestDto, Long id) {
+    public PresentGoodsBoardResponseDto update(PresentGoodsBoardRequestDto requestDto, Long id) {
 
-        NoticeBoard changeBoard = noticeBoardRepository.findById(id).orElse(null);
+        PresentGoodsBoard changeBoard = presentGoodsBoardRepository.findById(id).orElse(null);
         if(changeBoard == null) {
             return null;
         } else {
-            changeBoard.update(noticeRequestDto);
-            return NoticeMapper.INSTANCE.noticeBoardToNoticeResponseDto(noticeBoardRepository.save(changeBoard));
+            changeBoard.update(
+                    requestDto.getStatus(),
+                    requestDto.getTitle(),
+                    requestDto.getDescription()
+            );
+            return PresentGoodsBoardMapper.INSTANCE.entityToResponseDto(presentGoodsBoardRepository.save(changeBoard));
         }
     }
 
-    public NoticeResponseDto deleteNotice(Long id) {
+    public PresentGoodsBoardResponseDto delete(Long id) {
 
-        NoticeBoard changeBoard = noticeBoardRepository.findById(id).orElse(null);
+        PresentGoodsBoard changeBoard = presentGoodsBoardRepository.findById(id).orElse(null);
         if(changeBoard == null) {
             return null;
         } else {
             changeBoard.delete();
-            return NoticeMapper.INSTANCE.noticeBoardToNoticeResponseDto(noticeBoardRepository.save(changeBoard));
+            return PresentGoodsBoardMapper.INSTANCE.entityToResponseDto(presentGoodsBoardRepository.save(changeBoard));
         }
     }
 
-    private NoticeInfoDto entityToNoticeInfoDto(NoticeBoard noticeBoard) {
-        if(noticeBoard.getUser() == null) {
+    private PresentGoodsBoardInfoDto entityToInfoDto(PresentGoodsBoard presentGoodsBoard) {
+        if(presentGoodsBoard.getUser() == null) {
             return null;
         }
-        NoticeInfoDto infoDto = NoticeMapper.INSTANCE.noticeBoardToNoticeInfoDto(noticeBoard);
-        infoDto.setUserId(noticeBoard.getUser().getUserId());
+        PresentGoodsBoardInfoDto infoDto = PresentGoodsBoardMapper.INSTANCE.entityToInfoDto(presentGoodsBoard);
+        infoDto.setUserId(presentGoodsBoard.getUser().getUserId());
         return infoDto;
     }
 }

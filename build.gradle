@@ -19,6 +19,8 @@ repositories {
 	mavenCentral()
 }
 
+ext["groovy.version"] = "3.0.3"
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -33,6 +35,10 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
+
+	testImplementation 'io.rest-assured:rest-assured:4.3.3'
+	implementation group: 'io.rest-assured', name: 'json-path', version: '4.3.3'
+	implementation group: 'io.rest-assured', name: 'xml-path', version: '4.3.3'
 }
 
 test {

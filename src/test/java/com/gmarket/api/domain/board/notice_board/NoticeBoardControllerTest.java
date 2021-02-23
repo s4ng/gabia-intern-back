@@ -31,7 +31,7 @@ class NoticeBoardControllerTest {
             .status(Board.Status.CREATE)
             .title("test title")
             .description("test content")
-            .writeId("test userId")
+            .userId(1L)
             .build();
 
     private NoticeResponseDto noticeResponseDto = NoticeResponseDto.builder()
@@ -39,7 +39,7 @@ class NoticeBoardControllerTest {
             .status(Board.Status.CREATE)
             .title("test title")
             .description("test content")
-            .writeId("test userId")
+            .userId(1L)
             .build();
 
 

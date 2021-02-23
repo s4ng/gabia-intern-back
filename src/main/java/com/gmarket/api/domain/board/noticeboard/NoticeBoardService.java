@@ -58,7 +58,11 @@ public class NoticeBoardService {
         if(changeBoard == null) {
             return null;
         } else {
-            changeBoard.update(noticeRequestDto);
+            changeBoard.update(
+                    noticeRequestDto.getStatus(),
+                    noticeRequestDto.getTitle(),
+                    noticeRequestDto.getDescription()
+            );
             return NoticeMapper.INSTANCE.noticeBoardToNoticeResponseDto(noticeBoardRepository.save(changeBoard));
         }
     }
