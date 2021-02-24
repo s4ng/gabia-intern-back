@@ -5,7 +5,9 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -14,13 +16,16 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class PresentGoodsBoardTest {
 
     @Autowired PresentGoodsBoardRepository presentGoodsBoardRepository;
 
     private Long insertedDataId;
+
+    @LocalServerPort
+    private int port;
 
     Map<String, Object> createRequestForm() {
 
@@ -48,6 +53,7 @@ class PresentGoodsBoardTest {
         }
 
         Response res = RestAssured.given()
+                .port(port)
                 .contentType("application/json")
                 .body(createRequestForm())
                 .when()
@@ -61,12 +67,9 @@ class PresentGoodsBoardTest {
 
 
     @AfterEach
-    void deleteData(TestInfo testInfo) {
-        if(testInfo.getTags().contains("SkipCleanup")) {
-            return;
-        }
-
+    void deleteData() {
         if(insertedDataId != null) {
+            System.out.println(insertedDataId);
             presentGoodsBoardRepository.deleteById(insertedDataId);
         }
     }
@@ -79,6 +82,7 @@ class PresentGoodsBoardTest {
         Map<String, Object> requestForm = createRequestForm();
 
         Response res = RestAssured.given()
+                .port(port)
                 .contentType("application/json")
                 .body(requestForm).log().all()
                 .when()
@@ -98,6 +102,7 @@ class PresentGoodsBoardTest {
     void 나눔글_조회() {
         // id 확인 테스트
         RestAssured.given()
+                .port(port)
                 .pathParam("id", insertedDataId)
                 .when()
                 .get("/boards/share/posts/{id}")
@@ -114,6 +119,7 @@ class PresentGoodsBoardTest {
         map.put("title", "change title");
 
         RestAssured.given()
+                .port(port)
                 .contentType("application/json")
                 .pathParam("id", insertedDataId)
                 .body(map).log().all()
@@ -129,6 +135,7 @@ class PresentGoodsBoardTest {
     void 나눔글_삭제() {
         // 삭제 테스트
         RestAssured.given()
+                .port(port)
                 .pathParam("id", insertedDataId)
                 .when()
                 .delete("/boards/share/posts/{id}")
@@ -141,6 +148,7 @@ class PresentGoodsBoardTest {
     void 나눔글_페이지_확인() {
 
         RestAssured.given()
+                .port(port)
                 .queryParam("page", "1")
                 .when()
                 .get("/boards/share/posts")
