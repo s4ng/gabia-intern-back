@@ -1,25 +1,26 @@
 package com.gmarket.api.domain.board.noticeboard;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.gmarket.api.domain.board.Board;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import com.gmarket.api.domain.board.dto.BoardDto;
+import com.gmarket.api.domain.board.enums.NoticeCategory;
+import com.gmarket.api.global.util.ViewJSON;
+import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@DiscriminatorValue("NOTICE")
-@Table(name = "notice_board")
-@PrimaryKeyJoinColumn(name = "notice_board_id")
+@DiscriminatorValue("NOTICE") // DB board 구분 column 값
+@PrimaryKeyJoinColumn(name = "notice_board_id") // DB foreign key name
 public class NoticeBoard extends Board {
 
     @Enumerated(EnumType.STRING)
-    private  NoticeCategory noticeCategory;
+    @JsonView(ViewJSON.Views.class)
+    private NoticeCategory noticeCategory;
 
-    public enum NoticeCategory{
-        UPDATE, EVENT
+    public NoticeBoard copySub(NoticeBoard noticeBoard, BoardDto boardDto){
+        noticeBoard.noticeCategory = boardDto.getNoticeCategory();
+        return noticeBoard;
     }
 }

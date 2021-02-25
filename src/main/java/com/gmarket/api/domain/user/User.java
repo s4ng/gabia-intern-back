@@ -1,37 +1,29 @@
 package com.gmarket.api.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.gmarket.api.domain.alert.Alert;
-import com.gmarket.api.domain.alertkeyword.AlertKeyword;
-import com.gmarket.api.domain.board.Board;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.gmarket.api.domain.user.enums.UserStatus;
+import com.gmarket.api.global.util.ViewJSON;
+import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@NoArgsConstructor
+@Getter
+@JsonView(ViewJSON.Views.class)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "user_type")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
-@Getter @Setter
-public class User {
+public abstract class User {
     @Id @GeneratedValue
-    private Long userId;
+    private String userId;
+
+    @JsonView(ViewJSON.Repositorys.class)
+    private String password;
 
     private String nickname;
 
     private int activityPoint;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Board> boardList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "receiverId", cascade = CascadeType.ALL)
-    private List<Alert> alertList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "registerId", cascade = CascadeType.ALL)
-    private List<AlertKeyword> alertKeywordList = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @JsonView(ViewJSON.Repositorys.class)
+    private UserStatus status;
 }

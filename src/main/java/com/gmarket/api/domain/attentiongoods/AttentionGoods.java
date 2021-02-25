@@ -13,11 +13,11 @@ public class AttentionGoods {
     @Id @GeneratedValue
     private long attentionGoodsId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "register_id")
     private User registerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "used_board_id")
     private Board usedBoardId;
 
