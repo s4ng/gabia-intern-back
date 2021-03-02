@@ -14,6 +14,7 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "user_type")
 //@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
