@@ -44,7 +44,8 @@ class NoticeBoardControllerTest {
 
 
     @Test
-    void 공지사항_생성() throws Exception {
+    @DisplayName("공지사항_생성")
+    void createNotice() throws Exception {
 
         when(noticeBoardService.create(noticeRequestDto)).thenReturn(noticeResponseDto);
 
@@ -53,7 +54,8 @@ class NoticeBoardControllerTest {
     }
 
     @Test
-    void 공지사항_목록() {
+    @DisplayName("공지사항_목록")
+    void noticeList() {
         List<NoticeInfoDto> infoDtoList = new ArrayList<>();
         when(noticeBoardService.getNoticePage(1)).thenReturn(infoDtoList);
 
@@ -62,7 +64,8 @@ class NoticeBoardControllerTest {
     }
 
     @Test
-    void 글_조회() {
+    @DisplayName("글_조회")
+    void getNotice() {
         NoticeInfoDto noticeInfoDto = NoticeInfoDto.builder().build();
         when(noticeBoardService.getNoticeById(1L)).thenReturn(noticeInfoDto);
 
@@ -71,7 +74,8 @@ class NoticeBoardControllerTest {
     }
 
     @Test
-    void 글_수정() {
+    @DisplayName("글_수정")
+    void updateNotice() {
         when(noticeBoardService.updateNotice(noticeRequestDto, 1L)).thenReturn(noticeResponseDto);
 
         noticeBoardController.update(noticeRequestDto, 1L);
@@ -79,7 +83,8 @@ class NoticeBoardControllerTest {
     }
 
     @Test
-    void 글_삭제() {
+    @DisplayName("글_삭제")
+    void deleteNotice() {
         when(noticeBoardService.deleteNotice(1L)).thenReturn(noticeResponseDto);
 
         noticeBoardController.delete(1L);

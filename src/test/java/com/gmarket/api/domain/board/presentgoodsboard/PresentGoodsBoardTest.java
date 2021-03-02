@@ -76,7 +76,8 @@ class PresentGoodsBoardTest {
 
     @Test
     @Tag("SkipCleanup")
-    void 나눔글_생성() {
+    @DisplayName("나눔글_생성")
+    void saveShareBoard() {
 
         // 생성 테스트
         Map<String, Object> requestForm = createRequestForm();
@@ -99,7 +100,8 @@ class PresentGoodsBoardTest {
     }
 
     @Test
-    void 나눔글_조회() {
+    @DisplayName("나눔글_조회")
+    void findShareBoard() {
         // id 확인 테스트
         RestAssured.given()
                 .port(port)
@@ -113,7 +115,8 @@ class PresentGoodsBoardTest {
     }
 
     @Test
-    void 나눔글_수정() {
+    @DisplayName("나눔글_수정")
+    void updateShareBoard() {
         // 수정 테스트
         Map<String, Object> map = createRequestForm();
         map.put("title", "change title");
@@ -132,7 +135,8 @@ class PresentGoodsBoardTest {
     }
 
     @Test
-    void 나눔글_삭제() {
+    @DisplayName("나눔글_삭제")
+    void deleteShareBoard() {
         // 삭제 테스트
         RestAssured.given()
                 .port(port)
@@ -145,7 +149,8 @@ class PresentGoodsBoardTest {
     }
 
     @Test
-    void 나눔글_페이지_확인() {
+    @DisplayName("나눔글_페이지_확인")
+    void getShareBoardByPage() {
 
         RestAssured.given()
                 .port(port)
