@@ -33,22 +33,25 @@ class NoticeBoardServiceTest {
 //            .build();
 //
 //    @Test
-//    void 글_저장() {
+//    @DisplayName("글_저장")
+//    void saveNotice() {
 //        when(noticeBoardRepository.save(noticeBoard)).thenReturn(noticeBoard);
 //        noticeBoardService.create(noticeRequestDto);
 //        verify(noticeBoardRepository, times(1)).save(noticeBoard);
 //    }
 
-    @Test
-    void 글_하나_조회() {
-        Optional<NoticeBoard> noticeBoardOptional = Optional.empty();
-        when(noticeBoardRepository.findById(1L)).thenReturn(noticeBoardOptional);
-        noticeBoardService.getNoticeById(1L);
-        verify(noticeBoardRepository).findById(1L);
-    }
+//    @Test
+//    @DisplayName("글_하나_조회")
+//    void getNotice() {
+//        Optional<NoticeBoard> noticeBoardOptional = Optional.empty();
+//        when(noticeBoardRepository.findById(1L)).thenReturn(noticeBoardOptional);
+//        noticeBoardService.getNoticeById(1L);
+//        verify(noticeBoardRepository).findById(1L);
+//    }
 
     @Test
-    void 글_리스트_조회() {
+    @DisplayName("글_리스트_조회")
+    void noticeList() {
         Page<NoticeBoard> noticeBoardList = Page.empty();
         when(noticeBoardRepository.findAll(PageRequest.of(0, 20))).thenReturn(noticeBoardList);
         noticeBoardService.getNoticePage(1);

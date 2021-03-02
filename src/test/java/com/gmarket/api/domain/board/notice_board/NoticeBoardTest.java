@@ -21,7 +21,8 @@ class NoticeBoardTest {
 //            .build();
 //
 //    @Test
-//    void entity테스트() {
+//    @DisplayName("Entity_테스트")
+//    void entityTest() {
 //        assertEquals(noticeBoard.getContent(), "test content");
 //        assertEquals(noticeBoard.getUserId(), "test userId");
 //    }
