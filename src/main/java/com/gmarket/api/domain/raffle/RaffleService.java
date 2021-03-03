@@ -47,16 +47,17 @@ public class RaffleService {
                 findResult.reInsert();
                 raffleRepository.save(findResult);
                 return entityToDto(findResult);
-            } else {
-                return entityToDto(findResult);
             }
-        } else {
-
-            return entityToDto(raffleRepository.save(Raffle.builder()
-                    .presentBoard(presentBoard)
-                    .participant(user)
-                    .status(Raffle.Status.CREATE).build()));
+            
+            return entityToDto(findResult);
+            
         }
+
+        return entityToDto(raffleRepository.save(Raffle.builder()
+                .presentBoard(presentBoard)
+                .participant(user)
+                .status(Raffle.Status.CREATE).build()));
+        
     }
 
     public List<RaffleResponseDto> findByPostId(Long postId) {
