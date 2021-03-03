@@ -1,51 +1,37 @@
 package com.gmarket.api.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.gmarket.api.domain.user.enums.UserStatus;
-import com.gmarket.api.domain.user.enums.UserType;
-import com.gmarket.api.domain.user.manager.Manager;
-import com.gmarket.api.domain.user.member.*;
-import com.gmarket.api.global.util.BaseTimeEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.gmarket.api.domain.alert.Alert;
+import com.gmarket.api.domain.alertkeyword.AlertKeyword;
+import com.gmarket.api.domain.board.Board;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Getter
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "user_type")
-@JsonTypeInfo( // controller 에서 SubClass 로 json 주입 받기 위해
-        use= JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "user_type" // "user_type": "member" 일시 Member
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Manager.class, name = UserType.Values.MANAGER),
-        @JsonSubTypes.Type(value = Member.class, name = UserType.Values.MEMBER)
-})
-public abstract class User extends BaseTimeEntity {
+//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
+@Getter @Setter
+public class User {
     @Id @GeneratedValue
     private Long userId;
-
-    @Column(unique = true, length = 20) // DB loginId 중복 방지
-    private String loginId;
-
-    private String password;
 
     private String nickname;
 
     private int activityPoint;
 
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Board> boardList = new ArrayList<>();
 
-    public User(String loginId, String password, String nickname, int activityPoint, UserStatus status){
-        this.loginId = loginId;
-        this.password = password;
-        this.nickname = nickname;
-        this.activityPoint = activityPoint;
-        this.status = status;
-    }
+    @OneToMany(mappedBy = "receiverId", cascade = CascadeType.ALL)
+    private List<Alert> alertList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "registerId", cascade = CascadeType.ALL)
+    private List<AlertKeyword> alertKeywordList = new ArrayList<>();
 }
