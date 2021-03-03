@@ -3,6 +3,7 @@ package com.gmarket.api.domain.user;
 import com.gmarket.api.domain.user.enums.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,4 +27,13 @@ public class UserService {
         return userRepository.findByLoginIdAndStatus(loginId, UserStatus.CREATED); // login ID 조회
     }
 
+    // 유저 회원 가입 서비스
+    @Transactional
+    public User joinUser(User user) {
+        if(findUserId(user.getLoginId()) != null){
+            throw new IllegalStateException("이미 존재하는 ID 입니다.");
+        }
+        userRepository.save(user);
+        return user;
+    }
 }
