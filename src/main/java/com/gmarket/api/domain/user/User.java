@@ -48,4 +48,13 @@ public abstract class User extends BaseTimeEntity {
         this.activityPoint = activityPoint;
         this.status = status;
     }
+
+    public void delete() {
+        this.status = UserStatus.DELETED;
+    }
+
+    public void update(String password, String nickname) {
+        this.password = password;
+        this.nickname = nickname;
+    }
 }

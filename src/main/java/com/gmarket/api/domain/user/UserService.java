@@ -36,4 +36,23 @@ public class UserService {
         userRepository.save(user);
         return user;
     }
+
+    // 유저 정보 수정 서비스
+    public User updateUser(User user){
+        User updateUser = findUserId(user.getLoginId());
+        updateUser.update(user.getPassword(), user.getNickname());
+        userRepository.save(updateUser);
+        return updateUser;
+    }
+
+    // 유저 삭제 서비스
+    public String deleteUser(User user){
+        if(findUserId(user.getLoginId()) == null){
+            throw new IllegalStateException("이미 삭제된 ID 입니다.");
+        }
+        User deleteUser = findUserId(user.getLoginId());
+        deleteUser.delete();
+        userRepository.save(deleteUser);
+        return deleteUser.getLoginId();
+    }
 }
