@@ -41,7 +41,7 @@ public class RaffleService {
         // 없는 경우 새로 생성하여 저장한다.
         if(!raffleList.isEmpty()) {
 
-            Raffle findResult = raffleRepository.findById(raffleList.get(0).getRaffleId()).orElse(null);
+            Raffle findResult = raffleList.get(0);
 
             if (findResult.getStatus() == Raffle.Status.DELETE) {
                 findResult.reInsert();
