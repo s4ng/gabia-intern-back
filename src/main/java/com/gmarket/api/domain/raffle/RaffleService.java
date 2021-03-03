@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,18 +63,13 @@ public class RaffleService {
 
     public List<RaffleResponseDto> findByPostId(Long postId) {
 
-        List<RaffleResponseDto> responseDtoList = new ArrayList<>();
-
         PresentGoodsBoard presentBoard =
                 presentGoodsBoardRepository.findById(postId).orElse(null);
 
-        raffleRepository.findAllByPresentBoard(presentBoard).forEach(entity -> {
-                    if(entity.getStatus() == Raffle.Status.DELETE) return;
-                    responseDtoList.add(entityToDto(entity));
-                }
-        );
-
-        return responseDtoList;
+        return raffleRepository.findAllByPresentBoard(presentBoard).stream()
+                .filter(entity -> entity.getStatus() != Raffle.Status.DELETE)
+                .map(this::entityToDto)
+                .collect(Collectors.toList());
     }
 
     public boolean delete(Long postId, Long userId) {
