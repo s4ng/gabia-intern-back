@@ -39,4 +39,20 @@ public class UserController {
         return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
     } // 유저 회원 가입 컨트롤러 (Post)
 
+    @PutMapping("/user")
+    public ResponseEntity<ResponseWrapperDto> updateUser(@RequestBody User user) {
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data(userService.updateUser(user))
+                .build();
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
+    } // 유저 정보 수정 컨트롤러 (Put)
+
+    @DeleteMapping("/user")
+    public ResponseEntity<ResponseWrapperDto> deleteUser(@RequestBody User user) {
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data(userService.deleteUser(user))
+                .build();
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.NO_CONTENT);
+    } // 유저 탈퇴 컨트롤러 (Delete)
+
 }
