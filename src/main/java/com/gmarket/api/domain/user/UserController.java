@@ -23,5 +23,20 @@ public class UserController {
     } // 유저 로그인 컨트롤러 (Post)
 
 
+    @GetMapping("/user") // ex) domain.com/user?loginId=pablo
+    public ResponseEntity<ResponseWrapperDto> findUser(String loginId) {
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data(userService.findUserId(loginId))
+                .build();
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
+    } // 유저 조회 컨트롤러 (Get)
+
+    @PostMapping("/user")
+    public ResponseEntity<ResponseWrapperDto> joinUser(@RequestBody User user) {
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data( userService.joinUser(user))
+                .build();
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
+    } // 유저 회원 가입 컨트롤러 (Post)
 
 }
