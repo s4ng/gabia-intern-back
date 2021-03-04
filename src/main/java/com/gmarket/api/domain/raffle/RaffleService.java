@@ -10,6 +10,7 @@ import com.gmarket.api.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,24 +24,19 @@ public class RaffleService {
 
     public RaffleResponseDto save(RaffleRequestDto raffleRequestDto) {
 
-        PresentGoodsBoard presentBoard =
-                presentGoodsBoardRepository.findById(raffleRequestDto.getPresentBoardId()).orElse(null);
-        User user =
-                userRepository.findById(raffleRequestDto.getUserId()).orElse(null);
-
         /** Exception Handling 수정본
          * 확인하고 넘어가기
-         *
-         * PresentGoodsBoard presentBoard = presentGoodsBoardRepository.findById(raffleRequestDto.getPresentBoardId()).orElseThrow(() -> new NotFoundException("게시글이 존재하지 않습니다."));
-         * User user = userRepository.findById(raffleRequestDto.getUserId()).orElseThrow(() -> new NotFoundException("유효하지않은 사용자입니다."));
          */
+        PresentGoodsBoard presentBoard = presentGoodsBoardRepository
+                .findById(raffleRequestDto.getPresentBoardId())
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 존재하지 않습니다."));
+        User user = userRepository
+                .findById(raffleRequestDto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("유효하지않은 사용자입니다."));
 
-        // 나눔글이나 유저가 존재하지 않는다면 null 반환
-        if(presentBoard == null || user == null) {
-            return null;
-        }
-
-        Raffle findResult = raffleRepository.findByPresentBoardAndParticipant(presentBoard, user).orElse(null);
+        Raffle findResult = raffleRepository
+                .findByPresentBoardAndParticipant(presentBoard, user)
+                .orElse(null);
 
         // DELETE인 상태라면 CREATE로 바꾸고, CREATE 상태라면 그대로 다시 반환한다.
         // 없는 경우 새로 생성하여 저장한다.
@@ -75,15 +71,19 @@ public class RaffleService {
 
     public boolean delete(Long postId, Long userId) {
 
-        PresentGoodsBoard presentBoard =
-                presentGoodsBoardRepository.findById(postId).orElse(null);
-        User user =
-                userRepository.findById(userId).orElse(null);
+        PresentGoodsBoard presentBoard = presentGoodsBoardRepository
+                .findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 존재하지 않습니다."));
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("유효하지않은 사용자입니다."));
 
-        Raffle findRaffle = raffleRepository.findByPresentBoardAndParticipant(presentBoard, user).orElse(null);
+        Raffle findRaffle = raffleRepository
+                .findByPresentBoardAndParticipant(presentBoard, user)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않습니다."));
 
-        if(findRaffle == null || findRaffle.getStatus() == Raffle.Status.DELETE) {
-            return false;
+        if(findRaffle.getStatus() == Raffle.Status.DELETE) {
+            throw new EntityNotFoundException("이미 삭제되어있습니다.");
         }
 
         findRaffle.delete();

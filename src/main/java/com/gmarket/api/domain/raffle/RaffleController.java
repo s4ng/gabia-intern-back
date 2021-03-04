@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,10 +22,12 @@ public class RaffleController {
     @PostMapping(consumes = "application/json")
     public ResponseEntity<ResponseWrapperDto> saveRaffle(@RequestBody RaffleRequestDto raffleRequestDto) {
 
-        RaffleResponseDto saveResult = raffleService.save(raffleRequestDto);
-        if(saveResult == null) {
+        RaffleResponseDto saveResult;
+        try {
+            saveResult = raffleService.save(raffleRequestDto);
+        } catch(EntityNotFoundException e) {
             return new ResponseEntity<>(ResponseWrapperDto.builder().data("Save failed").build(),
-                    HttpStatus.CONFLICT);
+                    HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(ResponseWrapperDto.builder().data(saveResult).build(), HttpStatus.OK);
@@ -42,14 +45,14 @@ public class RaffleController {
             @RequestParam(name = "postid", required = true) Long postId,
             @RequestParam(name = "userid", required = true) Long userId) {
 
-        if(!raffleService.delete(postId, userId)) {
-            // 삭제 실패
+        try {
+            raffleService.delete(postId, userId);
+        } catch(EntityNotFoundException e) {
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Cannot found");
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        } else {
-            // 삭제 성공
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
