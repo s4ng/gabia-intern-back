@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface RaffleRepository extends JpaRepository<Raffle, Long> {
 
-    List<Raffle> findByPresentBoardAndParticipant(Board presentBoard, User participant);
+    Optional<Raffle> findByPresentBoardAndParticipant(Board presentBoard, User participant);
 
     List<Raffle> findAllByPresentBoard(Board presentBoard);
 }

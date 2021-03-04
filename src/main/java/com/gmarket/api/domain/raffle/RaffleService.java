@@ -10,7 +10,6 @@ import com.gmarket.api.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +30,7 @@ public class RaffleService {
 
         /** Exception Handling 수정본
          * 확인하고 넘어가기
-         * 
+         *
          * PresentGoodsBoard presentBoard = presentGoodsBoardRepository.findById(raffleRequestDto.getPresentBoardId()).orElseThrow(() -> new NotFoundException("게시글이 존재하지 않습니다."));
          * User user = userRepository.findById(raffleRequestDto.getUserId()).orElseThrow(() -> new NotFoundException("유효하지않은 사용자입니다."));
          */
@@ -41,32 +40,26 @@ public class RaffleService {
             return null;
         }
 
-        // 래플을 user와 글 entity로 찾아본다.
-        // 이 경우 pk로 찾는 경우가 아니기 때문에 리스트로 반환되게 된다.
-        List<Raffle> raffleList = raffleRepository.findByPresentBoardAndParticipant(presentBoard, user);
+        Raffle findResult = raffleRepository.findByPresentBoardAndParticipant(presentBoard, user).orElse(null);
 
-        // Raffle이 존재하는지 확인. 존재하면 그 raffle의 pk로 다시 한 번 검색을 시작한다.
         // DELETE인 상태라면 CREATE로 바꾸고, CREATE 상태라면 그대로 다시 반환한다.
         // 없는 경우 새로 생성하여 저장한다.
-        if(!raffleList.isEmpty()) {
+       if(findResult != null){
 
-            Raffle findResult = raffleList.get(0);
-
-            if (findResult.getStatus() == Raffle.Status.DELETE) {
+             if (findResult.getStatus() == Raffle.Status.DELETE) {
                 findResult.reInsert();
                 raffleRepository.save(findResult);
                 return RaffleMapper.INSTANCE.entityToDto(findResult);
             }
-            
+
             return RaffleMapper.INSTANCE.entityToDto(findResult);
-            
-        }
+       }
 
         return RaffleMapper.INSTANCE.entityToDto(raffleRepository.save(Raffle.builder()
                 .presentBoard(presentBoard)
                 .participant(user)
                 .status(Raffle.Status.CREATE).build()));
-        
+
     }
 
     public List<RaffleResponseDto> findByPostId(Long postId) {
@@ -87,14 +80,7 @@ public class RaffleService {
         User user =
                 userRepository.findById(userId).orElse(null);
 
-        long raffleId;
-        List<Raffle> raffleList = raffleRepository.findByPresentBoardAndParticipant(presentBoard, user);
-        if(!raffleList.isEmpty()) {
-            raffleId = raffleList.get(0).getRaffleId();
-        } else {
-            return false;
-        }
-        Raffle findRaffle = raffleRepository.findById(raffleId).orElse(null);
+        Raffle findRaffle = raffleRepository.findByPresentBoardAndParticipant(presentBoard, user).orElse(null);
 
         if(findRaffle == null || findRaffle.getStatus() == Raffle.Status.DELETE) {
             return false;
