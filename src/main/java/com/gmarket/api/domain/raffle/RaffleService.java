@@ -2,6 +2,7 @@ package com.gmarket.api.domain.raffle;
 
 import com.gmarket.api.domain.board.presentgoodsboard.PresentGoodsBoard;
 import com.gmarket.api.domain.board.presentgoodsboard.PresentGoodsBoardRepository;
+import com.gmarket.api.domain.raffle.dto.RaffleMapper;
 import com.gmarket.api.domain.raffle.dto.RaffleRequestDto;
 import com.gmarket.api.domain.raffle.dto.RaffleResponseDto;
 import com.gmarket.api.domain.user.User;
@@ -28,6 +29,13 @@ public class RaffleService {
         User user =
                 userRepository.findById(raffleRequestDto.getUserId()).orElse(null);
 
+        /** Exception Handling 수정본
+         * 확인하고 넘어가기
+         * 
+         * PresentGoodsBoard presentBoard = presentGoodsBoardRepository.findById(raffleRequestDto.getPresentBoardId()).orElseThrow(() -> new NotFoundException("게시글이 존재하지 않습니다."));
+         * User user = userRepository.findById(raffleRequestDto.getUserId()).orElseThrow(() -> new NotFoundException("유효하지않은 사용자입니다."));
+         */
+
         // 나눔글이나 유저가 존재하지 않는다면 null 반환
         if(presentBoard == null || user == null) {
             return null;
@@ -47,14 +55,14 @@ public class RaffleService {
             if (findResult.getStatus() == Raffle.Status.DELETE) {
                 findResult.reInsert();
                 raffleRepository.save(findResult);
-                return entityToDto(findResult);
+                return RaffleMapper.INSTANCE.entityToDto(findResult);
             }
             
-            return entityToDto(findResult);
+            return RaffleMapper.INSTANCE.entityToDto(findResult);
             
         }
 
-        return entityToDto(raffleRepository.save(Raffle.builder()
+        return RaffleMapper.INSTANCE.entityToDto(raffleRepository.save(Raffle.builder()
                 .presentBoard(presentBoard)
                 .participant(user)
                 .status(Raffle.Status.CREATE).build()));
@@ -68,7 +76,7 @@ public class RaffleService {
 
         return raffleRepository.findAllByPresentBoard(presentBoard).stream()
                 .filter(entity -> entity.getStatus() != Raffle.Status.DELETE)
-                .map(this::entityToDto)
+                .map(RaffleMapper.INSTANCE::entityToDto)
                 .collect(Collectors.toList());
     }
 
@@ -95,13 +103,5 @@ public class RaffleService {
         findRaffle.delete();
         raffleRepository.save(findRaffle);
         return true;
-    }
-
-    public RaffleResponseDto entityToDto(Raffle raffle) {
-        return RaffleResponseDto.builder()
-                .id(raffle.getRaffleId())
-                .presentBoardId(raffle.getPresentBoard().getBoardId())
-                .userId(raffle.getParticipant().getUserId())
-                .build();
     }
 }
