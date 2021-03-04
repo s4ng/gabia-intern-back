@@ -1,30 +1,19 @@
 package com.gmarket.api.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.gmarket.api.domain.user.dto.UserDto;
 import com.gmarket.api.domain.user.enums.UserStatus;
-import com.gmarket.api.domain.user.enums.UserType;
-import com.gmarket.api.domain.user.manager.Manager;
-import com.gmarket.api.domain.user.member.*;
 import com.gmarket.api.global.util.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
+
+import static com.gmarket.api.domain.user.enums.UserStatus.*;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "user_type")
-@JsonTypeInfo( // controller 에서 SubClass 로 json 주입 받기 위해
-        use= JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "user_type" // "user_type": "member" 일시 Member
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Manager.class, name = UserType.Values.MANAGER),
-        @JsonSubTypes.Type(value = Member.class, name = UserType.Values.MEMBER)
-})
 public abstract class User extends BaseTimeEntity {
     @Id @GeneratedValue
     private Long userId;
@@ -49,11 +38,39 @@ public abstract class User extends BaseTimeEntity {
         this.status = status;
     }
 
-    public void delete() {
-        this.status = UserStatus.DELETED;
+    public User loginDto(UserDto userDto){
+        this.loginId = userDto.getLoginId();
+        this.password = userDto.getPassword();
+        this.status = CREATED;
+        return this;
+    }
+    public User joinDto(UserDto userDto){
+        this.loginId = userDto.getLoginId();
+        this.password = userDto.getPassword();
+        this.nickname = userDto.getNickname();
+        this.status = CREATED;
+        return this;
     }
 
-    public void update(String password, String nickname) {
+    public User deleteDto(UserDto userDto) {
+        this.loginId = userDto.getLoginId();
+        this.password = userDto.getPassword();
+        this.status = CREATED;
+        return this;
+    }
+
+    public void delete() {
+        this.status = DELETED;
+    }
+
+    public User updateDto(UserDto userDto) {
+        this.loginId = userDto.getLoginId();
+        this.password = userDto.getPassword();
+        this.nickname = userDto.getNickname();
+        return this;
+    }
+
+    public void update(String password, String nickname){
         this.password = password;
         this.nickname = nickname;
     }
