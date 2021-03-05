@@ -33,7 +33,8 @@ class NoticeBoardServiceTest {
 //            .build();
 //
 //    @Test
-//    void 글_저장() {
+//    @DisplayName("글_저장")
+//    void saveNotice() {
 //        when(noticeBoardRepository.save(noticeBoard)).thenReturn(noticeBoard);
 //        noticeBoardService.create(noticeRequestDto);
 //        verify(noticeBoardRepository, times(1)).save(noticeBoard);

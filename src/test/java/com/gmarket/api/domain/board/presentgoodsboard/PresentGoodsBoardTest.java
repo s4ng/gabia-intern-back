@@ -5,7 +5,9 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -14,7 +16,7 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
 class PresentGoodsBoardTest {
 //
