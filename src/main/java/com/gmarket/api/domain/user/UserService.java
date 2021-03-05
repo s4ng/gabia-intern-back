@@ -15,13 +15,17 @@ public class UserService {
 
     // 유저 login 서비스
     public UserDto login(UserDto userDto){
-        User user = userDto.loginDtoToEntity();
-        if(findUserId(user.getLoginId()) == null){
-            throw new IllegalStateException("존재하지 않는 ID 입니다.");
-        } else if(userRepository.findByLoginIdAndPassword(user.getLoginId(), user.getPassword()) == null ){
-            throw new IllegalStateException("일치하지 않는 비밀번호 입니다.");
+        User loginUser = userRepository.findByLoginId(user.getLoginId())
+        .orElseThrow(() -> new Exception("존재하지 않는 사용자입니다."));
+        
+        if (loginUser.getStatus() != UserStatus.CREATED) {
+            throw new Exception("비활성화된 사용자입니다."); 
         }
-        User loginUser = userRepository.findByLoginIdAndPassword(user.getLoginId(), user.getPassword());
+
+        if (loginUser.getPassword() != user.getPassword()) {
+            throw new Exception("비밀번호가 다릅니다."); 
+        }
+
         return userDto.EntityToResponseDto(loginUser);
     }
 
