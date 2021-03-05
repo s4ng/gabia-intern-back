@@ -9,6 +9,7 @@ public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
 
     public User findByLoginIdAndStatus(String loginId, UserStatus userStatus);
 
-    public User findByLoginIdAndPassword(String loginId, String password);
+    // public User findByLoginIdAndPassword(String loginId, String password); 로그인 메서드 수정
 
+    public User findByLoginId(String loginId);
 }
