@@ -23,11 +23,13 @@ public class BoardMapper {
             usedGoodsBoard.copySub(usedGoodsBoard, boardDto);
             return usedGoodsBoard;
         }
-        else {
+        else if(boardType.equals(BoardType.present)) {
             PresentGoodsBoard presentGoodsBoard = new PresentGoodsBoard();
             presentGoodsBoard.copySuper(presentGoodsBoard, boardDto);
             presentGoodsBoard.copySub(presentGoodsBoard, boardDto);
             return presentGoodsBoard;
+        } else {
+            return null;
         }
     }
 }
