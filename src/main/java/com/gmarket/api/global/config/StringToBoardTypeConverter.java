@@ -11,7 +11,7 @@ public class StringToBoardTypeConverter implements Converter<String, BoardType> 
 
     @Override
     public BoardType convert(String source) {
-        if(!isLower(source)) throw new EnumConstantNotPresentException(BoardType.class,"url을 정확하게 작성하세요");
+        if(!isLower(source)) throw new IllegalStateException("url을 정확하게 입력하세요");
         return BoardType.valueOf(source.toUpperCase());
     }
 }
