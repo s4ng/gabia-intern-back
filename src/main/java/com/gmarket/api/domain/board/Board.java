@@ -46,11 +46,11 @@ public abstract class Board extends BaseTimeEntity {
         this.viewCount += 1;
     }
 
-    public Board copySuper(Board board, BoardDto boardDto){
-        board.boardId = boardDto.getBoardId();
-        board.title = boardDto.getTitle();
-        board.description = boardDto.getDescription();
-        board.status = boardDto.getStatus();
-        return board;
-    }
+ public Board copySuper(BoardDto boardDto){
+   this.boardId = boardDto.getBoardId();
+   this.title = boardDto.getTitle();
+   this.description = boardDto.getDescription();
+   this.status = boardDto.getStatus();
+   return this;
+}
 }
