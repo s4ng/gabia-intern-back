@@ -126,4 +126,30 @@ public class CommentService {
 
         commentRepositoryInterface.save(comment);
     }
+
+    // 댓글 조회
+    public List<CommentDto> commentList(BoardType boardType, Long boardId){
+
+        Optional<Board> optionalBoard = boardRepositoryInterface.findById(boardId);
+
+        if(optionalBoard.isEmpty()){
+            throw new IllegalStateException("존재하지 않는 게시글입니다");
+        }
+
+        if(optionalBoard.get().getStatus().equals(BoardStatus.DELETED)){
+            throw new IllegalStateException("이미 삭제된 게시글입니다");
+        }
+
+        List<Comment> commentList = commentRepository.findCommentList(
+                BoardType.boardTypeToSubClass(boardType), CommentStatus.DELETED);
+
+        List<CommentDto> commentDtoList = new ArrayList<>();
+
+        for(Comment comment: commentList){
+            CommentDto commentDto = new CommentDto();
+            commentDtoList.add(commentDto.entityToDto(comment));
+        }
+
+        return commentDtoList;
+    }
 }
