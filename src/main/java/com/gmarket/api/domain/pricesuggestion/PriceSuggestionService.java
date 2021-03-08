@@ -94,4 +94,35 @@ public class PriceSuggestionService {
 
         return priceSuggestionDto.entityToDto(priceSuggestionRepositoryInterface.save(priceSuggestion));
     }
+
+    @Transactional // 가격 수락의 경우 채팅 방 생성 기능이 함께 트랜잭션
+    // 따라서 채팅 관련 Dto가 리턴되어야 하는지 생각
+    public PriceSuggestionDto accept(PriceSuggestionDto priceSuggestionDto){
+
+        Optional<PriceSuggestion> optionalPriceSuggestion =
+                priceSuggestionRepositoryInterface.findById(priceSuggestionDto.getPriceSuggestionId());
+
+        if(optionalPriceSuggestion.isEmpty()){
+            throw new IllegalStateException("가격 제안 조회 내역이 존재하지 않습니다.");
+        }
+
+        if(!optionalPriceSuggestion.get().getStatus().equals(PriceSuggestionStatus.SUGGESTION)){
+            throw new IllegalStateException("가격 제안 상태가 아닙니다.");
+        }
+
+        if(!optionalPriceSuggestion.get().getUser().getUserId().equals(priceSuggestionDto.getUserId())){
+            throw new IllegalStateException("가격 제안 유저 식별 정보가 일치하지 않습니다");
+        }
+
+        if(!optionalPriceSuggestion.get().getBoard().getBoardId().equals(priceSuggestionDto.getBoardId())){
+            throw new IllegalStateException("가격 제안 게시글 식별 정보가 일치하지 않습니다");
+        }
+
+        PriceSuggestion priceSuggestion = optionalPriceSuggestion.get();
+
+        priceSuggestion.acceptStatus();
+
+        return priceSuggestionDto.entityToDto(priceSuggestionRepositoryInterface.save(priceSuggestion));
+    }
+
 }
