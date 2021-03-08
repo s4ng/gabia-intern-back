@@ -1,41 +1,34 @@
 package com.gmarket.api.domain.user.dto;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.gmarket.api.domain.user.User;
 import com.gmarket.api.domain.user.enums.UserType;
-import com.gmarket.api.domain.user.manager.Manager;
+import com.gmarket.api.global.util.JsonViews;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-@JsonTypeInfo( // controller 에서 SubClass 로 json 주입 받기 위해
-        use= JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "user_type" // "user_type": "member" 일시 Member
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = ManagerDto.class, name = UserType.Values.MANAGER),
-        @JsonSubTypes.Type(value = MemberDto.class, name = UserType.Values.MEMBER)
-})
-public abstract class UserDto {
+@Getter @Setter
+@JsonView(JsonViews.Response.class) // Dto 클래스를 최소화하여 구현하기 위해 JsonView 활용 
+public class UserDto { // Member, Manager 모든 정보가 일치하여 dto subclass 미생성
+
+    private UserType userType;
 
     private Long userId;
 
-    private String loginId;
+    private String gabiaId;
 
+    private String name;
+
+    @JsonView(JsonViews.Request.class) // 요청
     private String password;
 
-    private String nickname;
+    private int point;
 
-    private int activityPoint;
-
-    public abstract User loginDtoToEntity();
-    public abstract User joinDtoToEntity();
-    public abstract User updateDtoToEntity();
-    public abstract User deleteDtoToEntity();
-
-    public abstract UserDto EntityToResponseDto(User user);
-
+    public UserDto entityToDto(User user){
+        this.userId = user.getUserId();
+        this.name = user.getName();
+        this.gabiaId = user.getGabiaId();
+        this.userType = user.getUserType();
+        return this;
+    }
 }
