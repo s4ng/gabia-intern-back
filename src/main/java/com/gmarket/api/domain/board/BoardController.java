@@ -1,10 +1,7 @@
 package com.gmarket.api.domain.board;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.gmarket.api.domain.board.dto.BoardDto;
 import com.gmarket.api.domain.board.enums.BoardType;
-import com.gmarket.api.domain.board.subclass.noticeboard.NoticeBoard;
-import com.gmarket.api.global.util.JsonViews;
 import com.gmarket.api.global.util.ResponseWrapperDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
