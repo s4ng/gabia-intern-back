@@ -72,4 +72,38 @@ public class CommentService {
         return commentDto.entityToDto(commentRepositoryInterface.save(comment));
     }
 
+
+    // 댓글 수정
+    @Transactional
+    public CommentDto update(BoardType boardType, CommentDto commentDto){
+
+        if (!boardType.equals(commentDto.getBoardType())){
+            throw new IllegalStateException("게시판 타입이 일치하지 않습니다.");
+        }
+
+        if (commentDto.getComment().isEmpty()){
+            throw new IllegalStateException("댓글 내용이 입력되지 않았습니다.");
+        }
+
+        Optional<Comment> optionalComment = commentRepositoryInterface.findById(commentDto.getCommentId());
+
+        if(optionalComment.isEmpty()){
+            throw new IllegalStateException("존재하지 않는 댓글입니다.");
+        }
+
+        if(optionalComment.get().getStatus().equals(CommentStatus.DELETED)){
+            throw new IllegalStateException("이미 삭제된 댓글입니다.");
+        }
+
+        if(!commentDto.getUserId().equals(optionalComment.get().getUser().getUserId())){
+            throw new IllegalStateException("댓글 작성자만 수정할 수 있습니다");
+        }
+
+        Comment comment = optionalComment.get();
+
+        comment.update(commentDto);
+
+        return commentDto.entityToDto(commentRepositoryInterface.save(comment));
+    }
+
 }
