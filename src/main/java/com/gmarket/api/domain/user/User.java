@@ -1,38 +1,78 @@
 package com.gmarket.api.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.gmarket.api.domain.alert.Alert;
-import com.gmarket.api.domain.alertkeyword.AlertKeyword;
-import com.gmarket.api.domain.board.Board;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import com.gmarket.api.domain.board.dto.BoardDto;
+import com.gmarket.api.domain.user.dto.UserDto;
+import com.gmarket.api.domain.user.enums.UserStatus;
+import com.gmarket.api.domain.user.enums.UserType;
+import com.gmarket.api.global.util.BaseTimeEntity;
+import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "user_type")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
-@Getter @Setter
-public class User {
-    @Id @GeneratedValue
+@Getter
+@Inheritance(strategy = InheritanceType.JOINED) // jpa 상속 - 조인전략
+@DiscriminatorColumn(name="user_type") // 상속 타입 구분 컬럼 - DB
+public abstract class User extends BaseTimeEntity {
+    @Id // 식별자
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // DB increment 따름
+    @Column(name = "user_id")
     private Long userId;
 
-    private String nickname;
+    private String gabiaId;
 
-    private int activityPoint;
+    private String name;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Board> boardList = new ArrayList<>();
+    private String password;
 
-    @OneToMany(mappedBy = "receiverId", cascade = CascadeType.ALL)
-    private List<Alert> alertList = new ArrayList<>();
+    private int point;
 
-    @OneToMany(mappedBy = "registerId", cascade = CascadeType.ALL)
-    private List<AlertKeyword> alertKeywordList = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
+    @Transient // DB Column X
+    private UserType userType; // UserType 확인을 위함
+
+//    @OneToMany(mappedBy = "user") // 양방향 관계 설정
+//    private List<Board> boardList = new ArrayList<>();
+
+    public User dtoToEntity(UserDto userDto){
+        this.gabiaId = userDto.getGabiaId();
+        this.name = userDto.getName();
+        this.password = userDto.getPassword();
+        this.userType = userDto.getUserType();
+        return this;
+    }
+
+    // 유저 가입 상태
+    public void createdStatus(){
+        this.status = UserStatus.CREATED;
+    }
+
+    // 유저 탈퇴 상태
+    public void deletedStatus(){
+        this.status = UserStatus.DELETED;
+    }
+
+    public void userIdInput(Long userId){
+        this.userId = userId;
+    }
+
+    public void userTypeInput(UserType userType){
+        this.userType = userType;
+    }
+
+    public void update(UserDto userDto){
+        this.name = userDto.getName();
+        this.password = userDto.getPassword();
+    }
+
+    // board 연관 관계
+    public void boardDtoToSetId(BoardDto boardDto){
+        this.userId = boardDto.getUserId();
+    }
+
+    public void addPoint(int point){
+        this.point += point;
+    }
 }
