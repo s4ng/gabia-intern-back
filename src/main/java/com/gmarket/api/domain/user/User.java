@@ -1,77 +1,78 @@
 package com.gmarket.api.domain.user;
 
+import com.gmarket.api.domain.board.dto.BoardDto;
 import com.gmarket.api.domain.user.dto.UserDto;
 import com.gmarket.api.domain.user.enums.UserStatus;
+import com.gmarket.api.domain.user.enums.UserType;
 import com.gmarket.api.global.util.BaseTimeEntity;
-import lombok.*;
+import lombok.Getter;
 
 import javax.persistence.*;
 
-import static com.gmarket.api.domain.user.enums.UserStatus.*;
-
 @Entity
 @Getter
-@NoArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "user_type")
+@Inheritance(strategy = InheritanceType.JOINED) // jpa 상속 - 조인전략
+@DiscriminatorColumn(name="user_type") // 상속 타입 구분 컬럼 - DB
 public abstract class User extends BaseTimeEntity {
-    @Id @GeneratedValue
+    @Id // 식별자
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // DB increment 따름
+    @Column(name = "user_id")
     private Long userId;
 
-    @Column(unique = true, length = 20) // DB loginId 중복 방지
-    private String loginId;
+    private String gabiaId;
+
+    private String name;
 
     private String password;
 
-    private String nickname;
-
-    private int activityPoint;
+    private int point;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    public User(String loginId, String password, String nickname, int activityPoint, UserStatus status){
-        this.loginId = loginId;
-        this.password = password;
-        this.nickname = nickname;
-        this.activityPoint = activityPoint;
-        this.status = status;
-    }
+    @Transient // DB Column X
+    private UserType userType; // UserType 확인을 위함
 
-    public User loginDto(UserDto userDto){
-        this.loginId = userDto.getLoginId();
+//    @OneToMany(mappedBy = "user") // 양방향 관계 설정
+//    private List<Board> boardList = new ArrayList<>();
+
+    public User dtoToEntity(UserDto userDto){
+        this.gabiaId = userDto.getGabiaId();
+        this.name = userDto.getName();
         this.password = userDto.getPassword();
-        this.status = CREATED;
-        return this;
-    }
-    public User joinDto(UserDto userDto){
-        this.loginId = userDto.getLoginId();
-        this.password = userDto.getPassword();
-        this.nickname = userDto.getNickname();
-        this.status = CREATED;
+        this.userType = userDto.getUserType();
         return this;
     }
 
-    public User deleteDto(UserDto userDto) {
-        this.loginId = userDto.getLoginId();
+    // 유저 가입 상태
+    public void createdStatus(){
+        this.status = UserStatus.CREATED;
+    }
+
+    // 유저 탈퇴 상태
+    public void deletedStatus(){
+        this.status = UserStatus.DELETED;
+    }
+
+    public void userIdInput(Long userId){
+        this.userId = userId;
+    }
+
+    public void userTypeInput(UserType userType){
+        this.userType = userType;
+    }
+
+    public void update(UserDto userDto){
+        this.name = userDto.getName();
         this.password = userDto.getPassword();
-        this.status = CREATED;
-        return this;
     }
 
-    public void delete() {
-        this.status = DELETED;
+    // board 연관 관계
+    public void boardDtoToSetId(BoardDto boardDto){
+        this.userId = boardDto.getUserId();
     }
 
-    public User updateDto(UserDto userDto) {
-        this.loginId = userDto.getLoginId();
-        this.password = userDto.getPassword();
-        this.nickname = userDto.getNickname();
-        return this;
-    }
-
-    public void update(String password, String nickname){
-        this.password = password;
-        this.nickname = nickname;
+    public void addPoint(int point){
+        this.point += point;
     }
 }
