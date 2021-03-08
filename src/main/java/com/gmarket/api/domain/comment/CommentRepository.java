@@ -12,22 +12,5 @@ import java.util.List;
 public class CommentRepository {
     private final EntityManager em;
 
-    public List<Comment> findPostComments(String sql) {
-        em.createQuery("select m from NoticeComment m");
-        return em.createQuery(sql, Comment.class)
-                .getResultList();
-    }
 
-    public Comment findComment(long commentId) {
-        return em.find(Comment.class, commentId);
-    }
-
-    public Comment updateComment(Comment comment){
-        return em.find(comment.getClass(), comment.getCommentId());
-    }
-
-    public Long deleteComment(Comment comment){
-        em.find(comment.getClass(), comment.getCommentId());
-        return comment.getCommentId();
-    }
 }
