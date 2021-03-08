@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor // Bean 생성자
-@JsonView(ViewJSON.Views.class)
+@JsonView(JsonViews.Response.class)
 public class ResponseWrapperDto {
     private Object data;
 
