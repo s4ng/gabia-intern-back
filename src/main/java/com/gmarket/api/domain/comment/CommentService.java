@@ -106,4 +106,24 @@ public class CommentService {
         return commentDto.entityToDto(commentRepositoryInterface.save(comment));
     }
 
+    // 댓글 삭제
+    @Transactional
+    public void delete(BoardType boardType, Long commentId){
+
+        Optional<Comment> optionalComment = commentRepositoryInterface.findById(commentId);
+
+        if(optionalComment.isEmpty()){
+            throw new IllegalStateException("존재하지 않는 댓글입니다");
+        }
+
+        if(optionalComment.get().getStatus().equals(CommentStatus.DELETED)){
+            throw new IllegalStateException("이미 삭제된 댓글입니다");
+        }
+
+        Comment comment = optionalComment.get();
+
+        comment.deletedStatus();
+
+        commentRepositoryInterface.save(comment);
+    }
 }
