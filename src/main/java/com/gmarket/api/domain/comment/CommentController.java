@@ -95,4 +95,43 @@ public class CommentController {
     }
 //    댓글 삭제 DeleteMapping api 예시 -> domain.com/boards/notice/comments/1
 
+    // 게시글의 댓글 조회
+    @GetMapping
+    public ResponseEntity<ResponseWrapperDto> commentList(@PathVariable("boardType") BoardType boardType,
+                                                          Long boardId) {
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data(commentService.commentList(boardType, boardId))
+                .build();
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK); // 200 : [OK]
+    }
+/*
+    게시글의 댓글 조회 GetMapping api 예시 -> domain.com/boards/notice/comments?boardId=1
+
+    게시글의 댓글 조회 RequestBody 예시 ( 공지 사항 일때 )
+{
+        "data": [
+        {
+            "board_type": "NOTICE",
+                "comment_id": 1,
+                "board_id": 1,
+                "user_id": 1,
+                "comment": "comment1",
+                "status": "CREATED",
+                "created_at": "2021-03-08T15:47:07.721366",
+                "modified_at": "2021-03-08T15:47:07.721366"
+        },
+        {
+            "board_type": "NOTICE",
+                "comment_id": 2,
+                "board_id": 1,
+                "user_id": 1,
+                "comment": "comment1",
+                "status": "CREATED",
+                "created_at": "2021-03-08T15:47:09.634358",
+                "modified_at": "2021-03-08T15:47:09.634358"
+        }
+    ]
+}
+*/
+
 }
