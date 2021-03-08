@@ -1,11 +1,13 @@
 package com.gmarket.api.global.util;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor // Bean 생성자
+@JsonView(ViewJSON.Views.class)
 public class ResponseWrapperDto {
     private Object data;
 

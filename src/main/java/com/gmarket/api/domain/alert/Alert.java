@@ -5,10 +5,8 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
+
 @Getter
 public class Alert {
     @Id @GeneratedValue
@@ -16,7 +14,7 @@ public class Alert {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
-    private User receiverId;
+    private User user;
 
     private String message;
 
@@ -30,5 +28,6 @@ public class Alert {
     enum AlertType {
         KEYWORD, RAFFLE
     }
+
 
 }

@@ -18,11 +18,11 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class NoticeBoardServiceTest {
 
-    @InjectMocks
-    NoticeBoardService noticeBoardService;
-
-    @Mock
-    NoticeBoardRepository noticeBoardRepository;
+//    @InjectMocks
+//    NoticeBoardService noticeBoardService;
+//
+//    @Mock
+//    NoticeBoardRepository noticeBoardRepository;
 
 //    private NoticeRequestDto noticeRequestDto = NoticeRequestDto.builder()
 //            .status(BoardStatus.CREATE)
@@ -41,20 +41,18 @@ class NoticeBoardServiceTest {
 //    }
 
 //    @Test
-//    @DisplayName("글_하나_조회")
-//    void getNotice() {
+//    void 글_하나_조회() {
 //        Optional<NoticeBoard> noticeBoardOptional = Optional.empty();
 //        when(noticeBoardRepository.findById(1L)).thenReturn(noticeBoardOptional);
 //        noticeBoardService.getNoticeById(1L);
 //        verify(noticeBoardRepository).findById(1L);
 //    }
-
-    @Test
-    @DisplayName("글_리스트_조회")
-    void noticeList() {
-        Page<NoticeBoard> noticeBoardList = Page.empty();
-        when(noticeBoardRepository.findAll(PageRequest.of(0, 20))).thenReturn(noticeBoardList);
-        noticeBoardService.getNoticePage(1);
-        verify(noticeBoardRepository).findAll(PageRequest.of(0, 20));
-    }
+//
+//    @Test
+//    void 글_리스트_조회() {
+//        Page<NoticeBoard> noticeBoardList = Page.empty();
+//        when(noticeBoardRepository.findAll(PageRequest.of(0, 20))).thenReturn(noticeBoardList);
+//        noticeBoardService.getNoticePage(1);
+//        verify(noticeBoardRepository).findAll(PageRequest.of(0, 20));
+//    }
 }
