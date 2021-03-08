@@ -86,4 +86,13 @@ public class CommentController {
 }
 */
 
+    // 댓글 삭제
+    @DeleteMapping("{commentId}")
+    public ResponseEntity<ResponseWrapperDto> delete(@PathVariable("boardType") BoardType boardType,
+                                                     @PathVariable("commentId") Long commentId) {
+        commentService.delete(boardType, commentId);
+        return new ResponseEntity<>( HttpStatus.NO_CONTENT); // 204 : [No Content]
+    }
+//    댓글 삭제 DeleteMapping api 예시 -> domain.com/boards/notice/comments/1
+
 }
