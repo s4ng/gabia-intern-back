@@ -47,5 +47,38 @@ public class PriceSuggestionController {
 }
 */
 
+    // 가격 제시 거절 또는 제시 가격 변동 또는 가격 제시 취소
+    @PutMapping
+    public ResponseEntity<ResponseWrapperDto> update(@RequestBody PriceSuggestionDto priceSuggestionDto) {
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data(priceSuggestionService.update(priceSuggestionDto))
+                .build();
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.CREATED); // 201 : [Created]
+    }
+/*
+    제시 가격 수정PutMapping api 예시 -> domain.com/suggestion
 
+    제시 가격 수정 RequestBody 예시
+{
+    "price_suggestion_id": 1,
+    "user_id" : "2",
+    "board_id" : "1",
+    "status": "SUGGESTION",
+    "suggestion_price" : 50000000
+}
+
+
+    제시 가격 수정 ResponseBody 예시
+{
+    "data": {
+        "price_suggestion_id": 1,
+        "user_id": 2,
+        "board_id": 1,
+        "suggestion_price": 50000000,
+        "status": "SUGGESTION",
+        "created_at": "2021-03-08T20:31:21.466105",
+        "modified_at": "2021-03-08T20:31:49.1852325"
+    }
+}
+*/
 }
