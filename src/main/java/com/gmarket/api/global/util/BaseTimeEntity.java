@@ -15,16 +15,10 @@ import java.time.LocalDateTime;
 public abstract class BaseTimeEntity {
 
     @CreatedDate
+    @Column(name="created_at")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column(name="modified_at")
     private LocalDateTime modifiedAt;
-
-    public LocalDateTime getCreatedTime() {
-        return createdAt;
-    }
-
-    public LocalDateTime getModifiedTime() {
-        return modifiedAt;
-    }
 }
