@@ -65,4 +65,33 @@ public class PriceSuggestionService {
 
         return priceSuggestionDto.entityToDto(priceSuggestionRepositoryInterface.save(priceSuggestion));
     }
+
+    @Transactional
+    public PriceSuggestionDto update(PriceSuggestionDto priceSuggestionDto){
+
+        Optional<PriceSuggestion> optionalPriceSuggestion =
+                priceSuggestionRepositoryInterface.findById(priceSuggestionDto.getPriceSuggestionId());
+
+        if(optionalPriceSuggestion.isEmpty()){
+            throw new IllegalStateException("가격 제안 조회 내역이 존재하지 않습니다.");
+        }
+
+        if(!optionalPriceSuggestion.get().getStatus().equals(PriceSuggestionStatus.SUGGESTION)){
+            throw new IllegalStateException("가격 제안 상태가 아닙니다.");
+        }
+
+        if(!optionalPriceSuggestion.get().getUser().getUserId().equals(priceSuggestionDto.getUserId())){
+            throw new IllegalStateException("가격 제안 유저 식별 정보가 일치하지 않습니다");
+        }
+
+        if(!optionalPriceSuggestion.get().getBoard().getBoardId().equals(priceSuggestionDto.getBoardId())){
+            throw new IllegalStateException("가격 제안 게시글 식별 정보가 일치하지 않습니다");
+        }
+
+        PriceSuggestion priceSuggestion = optionalPriceSuggestion.get();
+
+        priceSuggestion.update(priceSuggestionDto.getSuggestionPrice(), priceSuggestionDto.getStatus());
+
+        return priceSuggestionDto.entityToDto(priceSuggestionRepositoryInterface.save(priceSuggestion));
+    }
 }
