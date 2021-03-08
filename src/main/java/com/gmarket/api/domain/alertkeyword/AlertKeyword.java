@@ -14,7 +14,7 @@ public class AlertKeyword {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "register_id")
-    private User registerId;
+    private User user;
 
     private String keyword;
 }
