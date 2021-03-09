@@ -22,6 +22,8 @@ public class CommentDto { // 댓글의 경우 Sub Entity Class 내용이 일치�
 
     private Long userId;
 
+    private String name;
+
     private String comment;
 
     private CommentStatus status;
@@ -35,6 +37,7 @@ public class CommentDto { // 댓글의 경우 Sub Entity Class 내용이 일치�
         this.commentId = comment.getCommentId();
         this.boardId = comment.getBoard().getBoardId();
         this.userId = comment.getUser().getUserId();
+        this.name = comment.getUser().getName();
         this.comment = comment.getComment();
         this.status = comment.getStatus();
         this.createdAt = comment.getCreatedAt();
