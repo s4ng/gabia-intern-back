@@ -30,12 +30,12 @@ public class CommentController {
     댓글 저장 RequestBody 예시 ( 공지 사항 일때 )
 {
     "board_type":"NOTICE",
-    "board_id" : "1",
-    "user_id":"1",
+    "board_id" : 1,
+    "user_id": 1,
     "comment":"comment1"
 }
 
-    게시글 저장 ResponseBody 예시 ( 공지 사항 일때 )
+    댓글 저장 ResponseBody 예시 ( 공지 사항 일때 )
 {
     "data": {
         "board_type": "NOTICE",
@@ -71,7 +71,7 @@ public class CommentController {
     "comment":"comment1_수정"
 }
 
-    게시글 저장 ResponseBody 예시 ( 공지 사항 일때 )
+    댓글 수정 ResponseBody 예시 ( 공지 사항 일때 )
 {
     "data": {
         "board_type": "NOTICE",
@@ -94,6 +94,7 @@ public class CommentController {
         return new ResponseEntity<>( HttpStatus.NO_CONTENT); // 204 : [No Content]
     }
 //    댓글 삭제 DeleteMapping api 예시 -> domain.com/boards/notice/comments/1
+
 
     // 게시글의 댓글 조회
     @GetMapping

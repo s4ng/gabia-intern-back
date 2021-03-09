@@ -17,7 +17,7 @@ import javax.persistence.*;
 @DiscriminatorColumn(name="board_type") // 상속 타입 구분 컬럼 - DB
 public abstract class Comment extends BaseTimeEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // DB increment 따름
     private Long commentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
