@@ -11,6 +11,9 @@ import com.gmarket.api.domain.user.UserRepositoryInterface;
 import com.gmarket.api.domain.user.User;
 import com.gmarket.api.domain.user.enums.UserStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +26,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class CommentService {
 
-    private final CommentRepository commentRepository;
     private final CommentRepositoryInterface commentRepositoryInterface;
     private final UserRepositoryInterface userRepositoryInterface;
     private final BoardRepositoryInterface boardRepositoryInterface;
@@ -71,7 +73,6 @@ public class CommentService {
 
         return commentDto.entityToDto(commentRepositoryInterface.save(comment));
     }
-
 
     // 댓글 수정
     @Transactional
@@ -140,8 +141,9 @@ public class CommentService {
             throw new IllegalStateException("이미 삭제된 게시글입니다");
         }
 
-        List<Comment> commentList = commentRepository.findCommentList(
-                BoardType.boardTypeToSubClass(boardType), CommentStatus.DELETED);
+        PageRequest pageRequest = PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.DESC, "commentId"));
+        Page<Comment> commentPage = commentRepositoryInterface.findByBoardAndStatusNot( optionalBoard.get(), CommentStatus.DELETED, pageRequest);
+        List<Comment> commentList  = commentPage.getContent();
 
         List<CommentDto> commentDtoList = new ArrayList<>();
 
