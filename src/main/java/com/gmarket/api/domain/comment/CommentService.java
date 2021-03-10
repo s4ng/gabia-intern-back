@@ -7,7 +7,7 @@ import com.gmarket.api.domain.board.enums.BoardStatus;
 import com.gmarket.api.domain.comment.enums.BoardType;
 import com.gmarket.api.domain.comment.dto.CommentDto;
 import com.gmarket.api.domain.comment.enums.CommentStatus;
-import com.gmarket.api.domain.user.UserRepositoryInterface;
+import com.gmarket.api.domain.user.UserRepository;
 import com.gmarket.api.domain.user.User;
 import com.gmarket.api.domain.user.enums.UserStatus;
 import lombok.RequiredArgsConstructor;
@@ -26,57 +26,50 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class CommentService {
 
-    private final CommentRepositoryInterface commentRepositoryInterface;
-    private final UserRepositoryInterface userRepositoryInterface;
+    private final CommentRepository CommentRepository;
+    private final UserRepository userRepository;
     private final BoardRepositoryInterface boardRepositoryInterface;
 
     // 댓글 저장
     @Transactional
-    public CommentDto save(BoardType boardType, CommentDto commentDto){
+    public CommentDto save( BoardType boardType, CommentDto commentDto ){
 
-        if (!boardType.equals(commentDto.getBoardType())){
+        if ( !boardType.equals( commentDto.getBoardType() ) ){
             throw new IllegalStateException("게시판 타입이 일치하지 않습니다.");
         }
 
-        if (commentDto.getComment().isEmpty()){
+        if ( commentDto.getComment().isEmpty() ){
             throw new IllegalStateException("댓글 내용이 입력되지 않았습니다.");
         }
 
-        Optional<Board> optionalBoard = boardRepositoryInterface.findById(commentDto.getBoardId());
+        Board board = boardRepositoryInterface.findById( commentDto.getBoardId() )
+                .orElseThrow( () -> new IllegalStateException("존재하지 않은 게시판입니다"));
 
-        if (optionalBoard.isEmpty()){
-            throw new IllegalStateException("존재하지 않은 게시판 입니다");
-        }
-
-        if(optionalBoard.get().getStatus().equals(BoardStatus.DELETED)){
+        if(board.getStatus().equals( BoardStatus.DELETED )){
             throw new IllegalStateException("이미 삭제된 게시판 입니다");
         }
 
-        Optional<User> optionalUser = userRepositoryInterface.findById(commentDto.getUserId());
+        User user = userRepository.findById( commentDto.getUserId() )
+                .orElseThrow( () -> new IllegalStateException("비회원은 댓글을 달 수 업습니다.") );
 
-        if (optionalUser.isEmpty()){
-            throw new IllegalStateException("비회원은 댓글을 달 수 없습니다");
-        }
-
-        if (optionalUser.get().getStatus().equals(UserStatus.DELETED)){
+        if ( user.getStatus().equals(UserStatus.DELETED) ){
             throw new IllegalStateException("탈퇴한 회원 입니다");
         }
 
-        Comment comment = BoardType.boardTypeToSubClass(boardType);
+        Comment comment = BoardType.boardTypeToSubClass( boardType ); // 게시판 타입에 맞는 자식 엔티티 변환
 
-        comment.dtoToEntity(commentDto);
+        comment.dtoToEntity( commentDto ); // dto -> entity 매핑
 
-        // 게시판, 유저 검증 후 세팅
-        comment.boardAndUserSetting(optionalBoard.get(), optionalUser.get());
+        comment.boardAndUserSetting( board, user ); // 게시판, 유저 검증 후 세팅
 
-        comment.createdStatus(); // 생성 상태 설정W
+        comment.createdStatus(); // 생성 상태 설정
 
-        return commentDto.entityToDto(commentRepositoryInterface.save(comment));
+        return commentDto.entityToDto(CommentRepository.save( comment )); // 댓글 엔티티 저장
     }
 
     // 댓글 수정
     @Transactional
-    public CommentDto update(BoardType boardType, CommentDto commentDto){
+    public CommentDto update( BoardType boardType, CommentDto commentDto ){
 
         if (!boardType.equals(commentDto.getBoardType())){
             throw new IllegalStateException("게시판 타입이 일치하지 않습니다.");
@@ -86,64 +79,54 @@ public class CommentService {
             throw new IllegalStateException("댓글 내용이 입력되지 않았습니다.");
         }
 
-        Optional<Comment> optionalComment = commentRepositoryInterface.findById(commentDto.getCommentId());
+        Comment comment = CommentRepository.findById( commentDto.getCommentId() ) // 식별 값으로 엔티티 조회
+                .orElseThrow( ()-> new IllegalStateException("존재하지 않는 댓글입니다.") );
 
-        if(optionalComment.isEmpty()){
-            throw new IllegalStateException("존재하지 않는 댓글입니다.");
-        }
-
-        if(optionalComment.get().getStatus().equals(CommentStatus.DELETED)){
+        if(comment.getStatus().equals(CommentStatus.DELETED)){
             throw new IllegalStateException("이미 삭제된 댓글입니다.");
         }
 
-        if(!commentDto.getUserId().equals(optionalComment.get().getUser().getUserId())){
+        if(!commentDto.getUserId().equals(comment.getUser().getUserId())){
             throw new IllegalStateException("댓글 작성자만 수정할 수 있습니다");
         }
 
-        Comment comment = optionalComment.get();
+        comment.update(commentDto); // 엔티티 수정
 
-        comment.update(commentDto);
-
-        return commentDto.entityToDto(commentRepositoryInterface.save(comment));
+        return commentDto.entityToDto(CommentRepository.save(comment)); // 수정된 댓글 엔티티 저장
     }
 
     // 댓글 삭제
     @Transactional
     public void delete(BoardType boardType, Long commentId){
 
-        Optional<Comment> optionalComment = commentRepositoryInterface.findById(commentId);
+        Comment comment = CommentRepository.findById(commentId)
+                .orElseThrow( ()-> new IllegalStateException("존재하지 않는 댓글입니다") );
 
-        if(optionalComment.isEmpty()){
-            throw new IllegalStateException("존재하지 않는 댓글입니다");
-        }
-
-        if(optionalComment.get().getStatus().equals(CommentStatus.DELETED)){
+        if( comment.getStatus().equals(CommentStatus.DELETED )){
             throw new IllegalStateException("이미 삭제된 댓글입니다");
         }
 
-        Comment comment = optionalComment.get();
+        comment.deletedStatus(); // 삭제 상태로 변경
 
-        comment.deletedStatus();
-
-        commentRepositoryInterface.save(comment);
+        CommentRepository.save(comment); // 상태 변경된 댓글 엔티티 저장
     }
 
     // 댓글 조회
     public List<CommentDto> commentList(BoardType boardType, Long boardId){
 
-        Optional<Board> optionalBoard = boardRepositoryInterface.findById(boardId);
+        Board board = boardRepositoryInterface.findById( boardId )
+                .orElseThrow( ()-> new IllegalStateException( "존재하지 않는 게시글입니다" ));
 
-        if(optionalBoard.isEmpty()){
-            throw new IllegalStateException("존재하지 않는 게시글입니다");
+        if( board.getStatus().equals(BoardStatus.DELETED )){
+            throw new IllegalStateException( "이미 삭제된 게시글입니다" );
         }
 
-        if(optionalBoard.get().getStatus().equals(BoardStatus.DELETED)){
-            throw new IllegalStateException("이미 삭제된 게시글입니다");
-        }
+        // 댓글의 경우 해당 게시글에서 전체 보기로 보여줌
+        PageRequest pageRequest =
+                PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.DESC, "commentId"));
 
-        PageRequest pageRequest = PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.DESC, "commentId"));
-        Page<Comment> commentPage = commentRepositoryInterface.findByBoardAndStatusNot( optionalBoard.get(), CommentStatus.DELETED, pageRequest);
-        List<Comment> commentList  = commentPage.getContent();
+        List<Comment> commentList = CommentRepository.
+                findByBoardAndStatusNot( board, CommentStatus.DELETED, pageRequest).getContent();
 
         List<CommentDto> commentDtoList = new ArrayList<>();
 

@@ -57,7 +57,7 @@ public class CommentController {
         ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
                 .data(commentService.update(boardType, commentDto))
                 .build();
-        return new ResponseEntity<>(responseWrapperDto, HttpStatus.CREATED); // 201 : [Created]
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK); // 200 : [OK]
     }
 /*
     댓글 수정 PutMapping api 예시 -> domain.com/boards/used/comments
