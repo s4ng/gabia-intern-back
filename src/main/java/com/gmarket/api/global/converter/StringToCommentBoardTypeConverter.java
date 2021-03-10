@@ -3,7 +3,7 @@ package com.gmarket.api.global.converter;
 import com.gmarket.api.domain.comment.enums.BoardType;
 import org.springframework.core.convert.converter.Converter;
 
-public class StringToBoardTypeConverter2 implements Converter<String, BoardType> {
+public class StringToCommentBoardTypeConverter implements Converter<String, BoardType> {
 
     public boolean isLower(String source) {
         return source.matches("^[a-z]*$");
