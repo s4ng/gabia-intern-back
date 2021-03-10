@@ -1,15 +1,17 @@
-package com.gmarket.api.domain.comment.usedgoodscomment;
+package com.gmarket.api.domain.comment.subclass.usedgoodscomment;
 
 import com.gmarket.api.domain.comment.Comment;
+import com.gmarket.api.domain.comment.enums.BoardType;
 import lombok.Getter;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
 @Getter
 @DiscriminatorValue("USED")
-@PrimaryKeyJoinColumn(name = "used_comment_id")
 public class UsedGoodsComment extends Comment {
+    public UsedGoodsComment(){
+        super.setBoardType(BoardType.USED);
+    }
 }

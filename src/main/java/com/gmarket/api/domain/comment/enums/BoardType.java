@@ -1,19 +1,29 @@
 package com.gmarket.api.domain.comment.enums;
 
-public enum BoardType {
-    notice, used, present;
+import com.gmarket.api.domain.comment.Comment;
+import com.gmarket.api.domain.comment.subclass.noticecomment.NoticeComment;
+import com.gmarket.api.domain.comment.subclass.presentgoodscomment.PresentGoodsComment;
+import com.gmarket.api.domain.comment.subclass.usedgoodscomment.UsedGoodsComment;
+import com.gmarket.api.domain.user.User;
+import com.gmarket.api.domain.user.enums.UserType;
+import com.gmarket.api.domain.user.subclass.manager.Manager;
+import com.gmarket.api.domain.user.subclass.member.Member;
+import lombok.Getter;
 
-    // BoardType -> Jpql: Entity
-    static public String enumToJpql(BoardType boardType){
-        switch (boardType) {
-            case notice:
-                return "NoticeBoard";
-            case used:
-                return "UsedGoodsBoard";
-            case present:
-                return "PresentGoodsBoard";
+@Getter
+public enum BoardType {
+    NOTICE, USED, PRESENT;
+
+    public static Comment boardTypeToSubClass(BoardType boardType){
+        switch (boardType){
+            case NOTICE:
+                return new NoticeComment();
+            case USED:
+                return new UsedGoodsComment();
+            case PRESENT:
+                return new PresentGoodsComment();
             default:
-                return "";
+                throw new IllegalStateException("정확한 게시판 타입을 입력하세요");
         }
     }
 }

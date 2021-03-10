@@ -1,33 +1,18 @@
 package com.gmarket.api.domain.comment;
 
-
-import lombok.RequiredArgsConstructor;
+import com.gmarket.api.domain.board.Board;
+import com.gmarket.api.domain.comment.enums.CommentStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
-@Repository // Bean Component
-@RequiredArgsConstructor // @RequiredArgsConstructor 어노테이션은 final, @NonNull 필드 값만 파라미터로 받는 생성자를 만듬
-public class CommentRepository {
-    private final EntityManager em;
+@Repository
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    public List<Comment> findPostComments(String sql) {
-        em.createQuery("select m from NoticeComment m");
-        return em.createQuery(sql, Comment.class)
-                .getResultList();
-    }
+    public Page<Comment> findByBoardAndStatusNot(Board board, CommentStatus commentStatus, Pageable pageable);
 
-    public Comment findComment(long commentId) {
-        return em.find(Comment.class, commentId);
-    }
-
-    public Comment updateComment(Comment comment){
-        return em.find(comment.getClass(), comment.getCommentId());
-    }
-
-    public Long deleteComment(Comment comment){
-        em.find(comment.getClass(), comment.getCommentId());
-        return comment.getCommentId();
-    }
 }

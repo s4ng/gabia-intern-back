@@ -1,55 +1,138 @@
 package com.gmarket.api.domain.comment;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.gmarket.api.domain.comment.dto.CommentDto;
 import com.gmarket.api.domain.comment.enums.BoardType;
+import com.gmarket.api.domain.comment.dto.CommentDto;
 import com.gmarket.api.global.util.ResponseWrapperDto;
-import com.gmarket.api.global.util.ViewJSON;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController // Json 형태로 데이터를 반환하기 위해 사용 @Controller + @ResponseBody = @RestController
-@RequiredArgsConstructor // @RequiredArgsConstructor 어노테이션은 final, @NonNull 필드 값만 파라미터로 받는 생성자를 만듬
+@RestController // backend api
+@RequiredArgsConstructor // final -> 생성자
+@RequestMapping("/boards/{boardType}/comments")
 public class CommentController {
 
     private final CommentService commentService;
 
-    @GetMapping("/boards/{boardType}/comments")
-    @JsonView(ViewJSON.Views.class)
-    public ResponseEntity<ResponseWrapperDto> findBoardPage(@PathVariable("boardType") BoardType boardType, long boardId) {
+    // 댓글 저장
+    @PostMapping
+    public ResponseEntity<ResponseWrapperDto> save(@PathVariable("boardType") BoardType boardType,
+                                                   @RequestBody CommentDto commentDto) {
         ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
-                .data(commentService.findPostComments(boardType, boardId))
+                .data(commentService.save(boardType, commentDto))
                 .build();
-        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
-    } // 하나의 게시글 댓글 전체 조회 GetMapping 컨트롤러
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.CREATED); // 201 : [Created]
+    }
+/*
+    댓글 저장 PostMapping api 예시 -> domain.com/boards/used/comments
 
-    @PostMapping("/boards/{boardType}/comments/")
-    @JsonView(ViewJSON.Views.class)
-    public ResponseEntity<ResponseWrapperDto> createPost(@PathVariable("boardType") BoardType boardType, CommentDto commentDto) {
-        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
-                .data(commentService.createComment(boardType, commentDto))
-                .build();
-        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
-    } // 댓글 생성 PostMapping 컨트롤러
+    댓글 저장 RequestBody 예시 ( 공지 사항 일때 )
+{
+    "board_type":"NOTICE",
+    "board_id" : 1,
+    "user_id": 1,
+    "comment":"comment1"
+}
 
-    @PutMapping("/boards/{boardType}/comments/")
-    @JsonView(ViewJSON.Views.class)
-    public ResponseEntity<ResponseWrapperDto> updatePost(@PathVariable("boardType") BoardType boardType, CommentDto commentDto) {
-        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
-                .data(commentService.updateComment(boardType, commentDto))
-                .build();
-        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
-    } // 댓글 수정 컨트롤러 PutMapping 컨트롤러
+    댓글 저장 ResponseBody 예시 ( 공지 사항 일때 )
+{
+    "data": {
+        "board_type": "NOTICE",
+        "comment_id": 1,
+        "board_id": 1,
+        "user_id": 1,
+        "comment": "comment1",
+        "status": "CREATED",
+        "created_at": "2021-03-08T15:23:34.1805968",
+        "modified_at": "2021-03-08T15:23:34.1805968"
+    }
+}
+*/
 
-    @DeleteMapping("/boards/{boardType}/comments/")
-    @JsonView(ViewJSON.Views.class)
-    public ResponseEntity<ResponseWrapperDto> deletePost(@PathVariable("boardType") BoardType boardType, long commentId) {
+    // 댓글 수정
+    @PutMapping
+    public ResponseEntity<ResponseWrapperDto> update(@PathVariable("boardType") BoardType boardType,
+                                                     @RequestBody CommentDto commentDto) {
         ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
-                .data(commentService.deleteComment(boardType, commentId))
+                .data(commentService.update(boardType, commentDto))
                 .build();
-        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK);
-    } // 댓글 삭제 컨트롤러 DeleteMapping 컨트롤러
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK); // 200 : [OK]
+    }
+/*
+    댓글 수정 PutMapping api 예시 -> domain.com/boards/used/comments
+
+    댓글 수정 RequestBody 예시 ( 공지 사항 일때 )
+{
+    "board_type":"NOTICE",
+    "comment_id": 1,
+    "board_id" : "1",
+    "user_id":"1",
+    "comment":"comment1_수정"
+}
+
+    댓글 수정 ResponseBody 예시 ( 공지 사항 일때 )
+{
+    "data": {
+        "board_type": "NOTICE",
+        "comment_id": 1,
+        "board_id": 1,
+        "user_id": 1,
+        "comment": "comment1_수정",
+        "status": "MODIFIED",
+        "created_at": "2021-03-08T15:23:29.493855",
+        "modified_at": "2021-03-08T15:23:29.493855"
+    }
+}
+*/
+
+    // 댓글 삭제
+    @DeleteMapping("{commentId}")
+    public ResponseEntity<ResponseWrapperDto> delete(@PathVariable("boardType") BoardType boardType,
+                                                     @PathVariable("commentId") Long commentId) {
+        commentService.delete(boardType, commentId);
+        return new ResponseEntity<>( HttpStatus.NO_CONTENT); // 204 : [No Content]
+    }
+//    댓글 삭제 DeleteMapping api 예시 -> domain.com/boards/notice/comments/1
+
+
+    // 게시글의 댓글 조회
+    @GetMapping
+    public ResponseEntity<ResponseWrapperDto> commentList(@PathVariable("boardType") BoardType boardType,
+                                                          Long boardId) {
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data(commentService.commentList(boardType, boardId))
+                .build();
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK); // 200 : [OK]
+    }
+/*
+    게시글의 댓글 조회 GetMapping api 예시 -> domain.com/boards/notice/comments?boardId=1
+
+    게시글의 댓글 조회 RequestBody 예시 ( 공지 사항 일때 )
+{
+        "data": [
+        {
+            "board_type": "NOTICE",
+                "comment_id": 1,
+                "board_id": 1,
+                "user_id": 1,
+                "comment": "comment1",
+                "status": "CREATED",
+                "created_at": "2021-03-08T15:47:07.721366",
+                "modified_at": "2021-03-08T15:47:07.721366"
+        },
+        {
+            "board_type": "NOTICE",
+                "comment_id": 2,
+                "board_id": 1,
+                "user_id": 1,
+                "comment": "comment1",
+                "status": "CREATED",
+                "created_at": "2021-03-08T15:47:09.634358",
+                "modified_at": "2021-03-08T15:47:09.634358"
+        }
+    ]
+}
+*/
 
 }
