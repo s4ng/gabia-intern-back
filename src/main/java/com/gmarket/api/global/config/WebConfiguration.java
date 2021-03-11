@@ -1,7 +1,7 @@
 package com.gmarket.api.global.config;
 
 import com.gmarket.api.global.converter.StringToBoardTypeConverter;
-import com.gmarket.api.global.converter.StringToBoardTypeConverter2;
+import com.gmarket.api.global.converter.StringToCommentBoardTypeConverter;
 import com.gmarket.api.global.converter.StringToUserTypeConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -15,7 +15,7 @@ public class WebConfiguration implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new StringToBoardTypeConverter());
         registry.addConverter(new StringToUserTypeConverter());
-        registry.addConverter(new StringToBoardTypeConverter2());
+        registry.addConverter(new StringToCommentBoardTypeConverter());
     }
 
     @Override
@@ -23,5 +23,4 @@ public class WebConfiguration implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*");
     }
-
 }
