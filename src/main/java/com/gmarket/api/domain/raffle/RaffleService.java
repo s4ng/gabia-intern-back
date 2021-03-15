@@ -1,12 +1,12 @@
 package com.gmarket.api.domain.raffle;
 
-import com.gmarket.api.domain.board.presentgoodsboard.PresentGoodsBoard;
-import com.gmarket.api.domain.board.presentgoodsboard.PresentGoodsBoardRepository;
+import com.gmarket.api.domain.board.Board;
+import com.gmarket.api.domain.board.BoardRepositoryInterface;
 import com.gmarket.api.domain.raffle.dto.RaffleMapper;
 import com.gmarket.api.domain.raffle.dto.RaffleRequestDto;
 import com.gmarket.api.domain.raffle.dto.RaffleResponseDto;
 import com.gmarket.api.domain.user.User;
-import com.gmarket.api.domain.user.UserRepository;
+import com.gmarket.api.domain.user.UserRepositoryInterface;
 import com.gmarket.api.global.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,15 +19,15 @@ import java.util.stream.Collectors;
 public class RaffleService {
 
     private final RaffleRepository raffleRepository;
-    private final PresentGoodsBoardRepository presentGoodsBoardRepository;
-    private final UserRepository userRepository;
+    private final BoardRepositoryInterface presentGoodsBoardRepository;
+    private final UserRepositoryInterface userRepository;
 
     public RaffleResponseDto save(RaffleRequestDto raffleRequestDto) {
 
         /** Exception Handling 수정본
          * 확인하고 넘어가기
          */
-        PresentGoodsBoard presentBoard = presentGoodsBoardRepository
+        Board presentBoard = presentGoodsBoardRepository
                 .findById(raffleRequestDto.getPresentBoardId())
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 존재하지 않습니다."));
         User user = userRepository
@@ -60,7 +60,7 @@ public class RaffleService {
 
     public List<RaffleResponseDto> findByPostId(Long postId) {
 
-        PresentGoodsBoard presentBoard =
+        Board presentBoard =
                 presentGoodsBoardRepository.findById(postId).orElse(null);
 
         return raffleRepository.findAllByPresentBoard(presentBoard).stream()
@@ -71,7 +71,7 @@ public class RaffleService {
 
     public void delete(Long postId, Long userId) {
 
-        PresentGoodsBoard presentBoard = presentGoodsBoardRepository
+        Board presentBoard = presentGoodsBoardRepository
                 .findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 존재하지 않습니다."));
         User user = userRepository
