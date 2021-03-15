@@ -21,10 +21,6 @@ spring:
       enabled: true
       max-file-size: 15MB
 
-  content:
-    fs:
-      filesystemRoot: /root/images
-
 logging:
   level:
     org.hibernate.SQL: debug # jpa나 hibernate가 생성하는 모든 sql이 log에 남겨진다
