@@ -33,9 +33,9 @@ public class ImageService {
 //        File dest = new File("C://images/" + sb.toString());
 
         // 해당 위치에 폴더가 없을 경우
-        if(!dest.exists()) {
-            dest.mkdir();
-        }
+        //if(!dest.exists()) {
+        //    dest.mkdir();
+        //}
 
         try {
             file.transferTo(dest);
