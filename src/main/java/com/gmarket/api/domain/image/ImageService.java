@@ -5,16 +5,27 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Date;
 
 @Service
 public class ImageService {
 
-    public String create(MultipartFile file) {
+    @PostConstruct
+    public void init() throws IOException {
+        File file = new File("/root/images/");
+//        File file = new File("C://images");
+        if(!file.isDirectory()) {
+            Files.createDirectory(file.toPath());
+        }
+    }
+
+    public String create(MultipartFile file) throws Exception {
 
         Date date = new Date();
         StringBuilder sb = new StringBuilder();
@@ -33,14 +44,12 @@ public class ImageService {
 //        File dest = new File("C://images/" + sb.toString());
 
         // 해당 위치에 폴더가 없을 경우
-        if(!dest.exists()) {
-            dest.mkdir();
-        }
 
         try {
             file.transferTo(dest);
         } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
+            throw e;
         }
 
         return sb.toString();
