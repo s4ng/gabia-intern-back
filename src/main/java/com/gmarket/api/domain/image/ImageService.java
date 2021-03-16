@@ -16,10 +16,13 @@ import java.util.Date;
 @Service
 public class ImageService {
 
+//    윈도우용 이미지 저장 경로
+//    private String imagePath = "C://images";
+    private final String imagePath = "/root/images/";
+
     @PostConstruct
     public void init() throws IOException {
-        File file = new File("/root/images/");
-//        File file = new File("C://images");
+        File file = new File(imagePath);
         if(!file.isDirectory()) {
             Files.createDirectory(file.toPath());
         }
@@ -38,10 +41,7 @@ public class ImageService {
             sb.append(file.getOriginalFilename());
         }
 
-//        리눅스 클라우드용
-        File dest = new File("/root/images/" + sb.toString());
-//        윈도우 테스트
-//        File dest = new File("C://images/" + sb.toString());
+        File dest = new File(imagePath + sb.toString());
 
         try {
             file.transferTo(dest);
@@ -55,10 +55,7 @@ public class ImageService {
 
     public byte[] getImage(String imageName) throws Exception {
 
-//        리눅스 클라우드용
-        InputStream imageStream = new FileInputStream("/root/images/" + imageName);
-//        윈도우 테스트
-//        InputStream imageStream = new FileInputStream("C://images/" + imageName);
+        InputStream imageStream = new FileInputStream(imagePath + imageName);
         byte[] imageByteArray = IOUtils.toByteArray(imageStream);
         imageStream.close();
         return imageByteArray;
