@@ -1,14 +1,11 @@
 package com.gmarket.api.domain.comment.dto;
 
-import com.gmarket.api.domain.board.Board;
 import com.gmarket.api.domain.comment.Comment;
 import com.gmarket.api.domain.comment.enums.BoardType;
 import com.gmarket.api.domain.comment.enums.CommentStatus;
-import com.gmarket.api.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter @Setter

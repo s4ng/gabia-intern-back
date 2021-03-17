@@ -4,10 +4,6 @@ import com.gmarket.api.domain.comment.Comment;
 import com.gmarket.api.domain.comment.subclass.noticecomment.NoticeComment;
 import com.gmarket.api.domain.comment.subclass.presentgoodscomment.PresentGoodsComment;
 import com.gmarket.api.domain.comment.subclass.usedgoodscomment.UsedGoodsComment;
-import com.gmarket.api.domain.user.User;
-import com.gmarket.api.domain.user.enums.UserType;
-import com.gmarket.api.domain.user.subclass.manager.Manager;
-import com.gmarket.api.domain.user.subclass.member.Member;
 import lombok.Getter;
 
 @Getter
