@@ -6,11 +6,13 @@ import com.gmarket.api.domain.board.subclass.presentgoodsboard.enums.PresentGood
 import com.gmarket.api.domain.board.subclass.presentgoodsboard.enums.PresentGoodsStatus;
 import lombok.Getter;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@DiscriminatorValue("PRESENT")
 public class PresentGoodsBoard extends Board {
 
     private PresentGoodsCategory presentGoodsCategory;
@@ -19,11 +21,14 @@ public class PresentGoodsBoard extends Board {
 
     private LocalDateTime raffleClosedAt;
 
+    private String img;
+
     public PresentGoodsBoard dtoToPresentGoodsBoard(PresentGoodsBoardDto presentGoodsBoardDto){
         super.dtoToEntity(presentGoodsBoardDto);
         this.presentGoodsCategory = presentGoodsBoardDto.getPresentGoodsCategory();
         this.presentGoodsStatus = presentGoodsBoardDto.getPresentGoodsStatus();
         this.raffleClosedAt = presentGoodsBoardDto.getRaffleClosedAt();
+        this.img = presentGoodsBoardDto.getImg();
         return this;
     }
 }
