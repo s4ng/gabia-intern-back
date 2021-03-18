@@ -30,6 +30,8 @@ public abstract class Board extends BaseTimeEntity {
 
     private String description;
 
+    private int viewCount;
+
     @Transient  // DB Column X
     private BoardType boardType; // BoardType 확인을 위함
 
@@ -67,4 +69,13 @@ public abstract class Board extends BaseTimeEntity {
 //        user.getBoardList().add(this);
 //        user.getBoardList();
     }
+
+    public void addViewCount(){
+        this.viewCount++;
+    }
+
+    public void completeDeal(){
+        this.title = "[판매완료]"+this.title;
+    }
+
 }

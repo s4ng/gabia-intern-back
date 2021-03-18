@@ -26,12 +26,15 @@ public class UsedGoodsBoard extends Board {
 
     private boolean priceSuggestion;
 
+    private String img;
+
     public UsedGoodsBoard dtoToUsedGoodsBoard(UsedGoodsBoardDto usedGoodsBoardDto){
         super.dtoToEntity(usedGoodsBoardDto);
         this.usedGoodsCategory = usedGoodsBoardDto.getUsedGoodsCategory();
         this.usedGoodsStatus = usedGoodsBoardDto.getUsedGoodsStatus();
         this.sellPrice = usedGoodsBoardDto.getSellPrice();
         this.priceSuggestion = usedGoodsBoardDto.isPriceSuggestion();
+        this.img = usedGoodsBoardDto.getImg();
         return this;
     }
 }
