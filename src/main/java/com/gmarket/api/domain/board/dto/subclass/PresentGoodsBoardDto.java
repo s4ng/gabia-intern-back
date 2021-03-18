@@ -5,7 +5,6 @@ import com.gmarket.api.domain.board.enums.BoardType;
 import com.gmarket.api.domain.board.subclass.presentgoodsboard.PresentGoodsBoard;
 import com.gmarket.api.domain.board.subclass.presentgoodsboard.enums.PresentGoodsCategory;
 import com.gmarket.api.domain.board.subclass.presentgoodsboard.enums.PresentGoodsStatus;
-import com.gmarket.api.domain.user.enums.UserType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,12 +19,15 @@ public class PresentGoodsBoardDto extends BoardDto {
 
     private LocalDateTime raffleClosedAt;
 
+    private String img;
+
     public PresentGoodsBoardDto presentGoodsBoardToDto(PresentGoodsBoard presentGoodsBoard){
         entityToDto(presentGoodsBoard);
-        this.setUserType(UserType.MEMBER);
+        this.setUserType(presentGoodsBoard.getUserType());
         this.presentGoodsCategory = presentGoodsBoard.getPresentGoodsCategory();
         this.presentGoodsStatus = presentGoodsBoard.getPresentGoodsStatus();
         this.raffleClosedAt = presentGoodsBoard.getRaffleClosedAt();
+        this.img = presentGoodsBoard.getImg();
         return this;
     }
 
