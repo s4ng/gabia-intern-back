@@ -9,6 +9,7 @@ import com.gmarket.api.domain.comment.dto.CommentDto;
 import com.gmarket.api.domain.comment.enums.CommentStatus;
 import com.gmarket.api.domain.user.UserRepository;
 import com.gmarket.api.domain.user.User;
+import com.gmarket.api.domain.user.UserRepositoryInterface;
 import com.gmarket.api.domain.user.enums.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,7 @@ import java.util.Optional;
 public class CommentService {
 
     private final CommentRepository CommentRepository;
-    private final UserRepository userRepository;
+    private final UserRepositoryInterface userRepository;
     private final BoardRepositoryInterface boardRepositoryInterface;
 
     // 댓글 저장

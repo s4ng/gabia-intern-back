@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.JOINED) // JPA 상속 매핑 전략 (조인 전략)
 public class Raffle {
     @Id @GeneratedValue
-    private long raffleId;
+    private Long raffleId;
 
     @ManyToOne
     @JoinColumn(name = "present_board")
