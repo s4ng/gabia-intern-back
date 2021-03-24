@@ -1,6 +1,6 @@
 spring:
   datasource: #database source 작성
-    url: jdbc:mysql://139.150.76.155:3306/test?characterEncoding=UTF-8 # 쿼리 스트링으로 UTF-8 인코딩 설정
+    url: jdbc:mysql://139.150.76.155:3306/test3?characterEncoding=UTF-8 # 쿼리 스트링으로 UTF-8 인코딩 설정
     username: root
     passowrd:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,6 +15,11 @@ spring:
 #        show_sql: true # jpa, hibernate가 생성하는 모든 sql이 sout으로 찍힌다
                        # 운영환경에서는 sout이 아닌 log로 나타내야 한다
         format_sql: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 15MB
 
 logging:
   level:

@@ -12,7 +12,7 @@ import com.gmarket.api.domain.comment.dto.CommentDto;
 import com.gmarket.api.domain.comment.enums.BoardType;
 import com.gmarket.api.domain.comment.enums.CommentStatus;
 import com.gmarket.api.domain.user.User;
-import com.gmarket.api.domain.user.UserRepository;
+import com.gmarket.api.domain.user.UserRepositoryInterface;
 import com.gmarket.api.domain.user.enums.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -29,10 +29,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CommentService {
 
-    private final CommentRepository commentRepository;
-
-    private final UserRepository userRepositoryInterface;
-
+    private final CommentRepository CommentRepository;
+    private final UserRepositoryInterface userRepository;
     private final BoardRepositoryInterface boardRepositoryInterface;
 
     private final AlertRepository alertRepository;
