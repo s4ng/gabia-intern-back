@@ -1,12 +1,14 @@
 package com.gmarket.api.domain.raffle;
 
 import com.gmarket.api.domain.board.Board;
+import com.gmarket.api.domain.raffle.enums.RaffleStatus;
 import com.gmarket.api.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
+@Setter
 @Getter
 @Builder
 @NoArgsConstructor
@@ -17,25 +19,22 @@ public class Raffle {
     private Long raffleId;
 
     @ManyToOne
-    @JoinColumn(name = "present_board")
-    private Board presentBoard;
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     @ManyToOne
-    @JoinColumn(name = "participant")
-    private User participant;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private RaffleStatus status;
 
-    public enum Status {
-        CREATE, DELETE
-    }
 
     public void delete() {
-        this.status = Status.DELETE;
+        this.status = RaffleStatus.DELETED;
     }
 
     public void reInsert() {
-        this.status = Status.CREATE;
+        this.status = RaffleStatus.CREATED;
     }
 }

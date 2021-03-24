@@ -2,19 +2,15 @@ package com.gmarket.api.domain.board.dto;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.gmarket.api.domain.board.Board;
 import com.gmarket.api.domain.board.dto.subclass.NoticeBoardDto;
 import com.gmarket.api.domain.board.dto.subclass.PresentGoodsBoardDto;
 import com.gmarket.api.domain.board.dto.subclass.UsedGoodsBoardDto;
 import com.gmarket.api.domain.board.enums.BoardStatus;
 import com.gmarket.api.domain.board.enums.BoardType;
-import com.gmarket.api.domain.board.subclass.presentgoodsboard.PresentGoodsBoard;
-import com.gmarket.api.domain.board.subclass.presentgoodsboard.enums.PresentGoodsCategory;
-import com.gmarket.api.domain.board.subclass.presentgoodsboard.enums.PresentGoodsStatus;
-import com.gmarket.api.domain.board.subclass.usedgoodsboard.UsedGoodsBoard;
-import com.gmarket.api.domain.board.subclass.usedgoodsboard.enums.UsedGoodsCategory;
-import com.gmarket.api.domain.board.subclass.usedgoodsboard.enums.UsedGoodsStatus;
 import com.gmarket.api.domain.user.enums.UserType;
+import com.gmarket.api.global.util.JsonViews;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,10 +27,12 @@ import java.time.LocalDateTime;
         @JsonSubTypes.Type(value = UsedGoodsBoardDto.class, name = BoardType.Values.USED),
         @JsonSubTypes.Type(value = PresentGoodsBoardDto.class, name = BoardType.Values.PRESENT)
 })
-public class BoardDto {
+@JsonView(JsonViews.Response.class)
+public class BoardDto{
 
     private BoardType boardType;
 
+    @JsonView(JsonViews.Request.class)
     private UserType userType;
 
     private Long boardId;
@@ -49,6 +47,12 @@ public class BoardDto {
 
     private String description;
 
+    private int viewCount;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime modifiedAt;
+
     public void entityToDto(Board board){
         this.userType = board.getUserType();
         this.boardId = board.getBoardId();
@@ -57,6 +61,9 @@ public class BoardDto {
         this.status = board.getStatus();
         this.title = board.getTitle();
         this.description = board.getDescription();
+        this.createdAt = board.getCreatedAt();
+        this.modifiedAt = board.getModifiedAt();
+        this.viewCount = board.getViewCount();
     }
 
 }

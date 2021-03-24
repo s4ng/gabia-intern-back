@@ -5,10 +5,12 @@ import com.gmarket.api.domain.board.dto.subclass.NoticeBoardDto;
 import com.gmarket.api.domain.board.subclass.noticeboard.enums.NoticeCategory;
 import lombok.Getter;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
 @Getter
+@DiscriminatorValue("NOTICE")
 public class NoticeBoard extends Board {
 
     private NoticeCategory noticeCategory;
