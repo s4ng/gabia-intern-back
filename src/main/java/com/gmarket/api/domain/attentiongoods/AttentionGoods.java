@@ -1,25 +1,48 @@
 package com.gmarket.api.domain.attentiongoods;
 
+import com.gmarket.api.domain.attentiongoods.dto.AttentionGoodsDto;
+import com.gmarket.api.domain.attentiongoods.enums.AttentionGoodsStatus;
 import com.gmarket.api.domain.board.Board;
 import com.gmarket.api.domain.user.User;
+import com.gmarket.api.global.util.BaseTimeEntity;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
-public class AttentionGoods {
-    @Id @GeneratedValue
-    private long attentionGoodsId;
+public class AttentionGoods extends BaseTimeEntity {
 
-    @ManyToOne
-    @JoinColumn(name = "register_id")
-    private User registerId;
+    @Id
+    @GeneratedValue
+    private Long attentionGoodsId;
 
-    @ManyToOne
-    @JoinColumn(name = "used_board_id")
-    private Board usedBoardId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private LocalDateTime createAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
+
+    @Enumerated(EnumType.STRING)
+    private AttentionGoodsStatus status;
+
+    public AttentionGoods dtoToEntity(AttentionGoodsDto attentionGoodsDto){
+        this.attentionGoodsId = attentionGoodsDto.getAttentionGoodsId();
+        return this;
+    }
+
+    public void userAndBoardSetting(User user, Board board){
+        this.user = user;
+        this.board = board;
+    }
+
+    public void registeredStatus(){
+        this.status = AttentionGoodsStatus.REGISTERED;
+    }
+
+    public void cancelStatus(){
+        this.status = AttentionGoodsStatus.CANCEL;
+    }
 }
