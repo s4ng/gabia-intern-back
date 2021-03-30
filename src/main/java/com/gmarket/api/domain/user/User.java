@@ -2,6 +2,7 @@ package com.gmarket.api.domain.user;
 
 import com.gmarket.api.domain.board.dto.BoardDto;
 import com.gmarket.api.domain.user.dto.UserDto;
+import com.gmarket.api.domain.user.dto.UserUpdateDto;
 import com.gmarket.api.domain.user.enums.UserStatus;
 import com.gmarket.api.domain.user.enums.UserType;
 import com.gmarket.api.global.util.BaseTimeEntity;
@@ -62,9 +63,9 @@ public abstract class User extends BaseTimeEntity {
         this.userType = userType;
     }
 
-    public void update(UserDto userDto){
-        this.name = userDto.getName();
-        this.password = userDto.getPassword();
+    public void update(UserUpdateDto userUpdateDto){
+        this.name = userUpdateDto.getName();
+        this.password = userUpdateDto.getNewPassword();
     }
 
     // board 연관 관계
@@ -75,4 +76,5 @@ public abstract class User extends BaseTimeEntity {
     public void addPoint(int point){
         this.point += point;
     }
+
 }

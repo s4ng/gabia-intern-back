@@ -2,6 +2,7 @@ package com.gmarket.api.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.gmarket.api.domain.user.dto.UserDto;
+import com.gmarket.api.domain.user.dto.UserUpdateDto;
 import com.gmarket.api.domain.user.enums.UserType;
 import com.gmarket.api.global.util.JsonViews;
 import com.gmarket.api.global.util.ResponseWrapperDto;
@@ -18,31 +19,53 @@ public class UserController {
     private final UserService userService;
 
     // 유저 가입
-    @PostMapping("/{userType}")
-    @JsonView(JsonViews.Response.class)
-    public ResponseEntity<ResponseWrapperDto> join(@PathVariable("userType") UserType userType, @RequestBody UserDto userDto) {
+    @PostMapping
+    public ResponseEntity<ResponseWrapperDto> join(@RequestBody UserDto userDto) {
         ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
-                .data(userService.join(userType, userDto))
+                .data(userService.join(userDto))
                 .build();
         return new ResponseEntity<>(responseWrapperDto, HttpStatus.CREATED); // 201 : [Created]
     }
 /*
-    유저 가입 PostMapping api 예시 -> domain.com/users/manager
+    유저 가입 PostMapping api 예시 -> domain.com/users
 
     유저 가입 RequestBody 예시
 {
-    "user_type":"MANAGER",
-    "gabia_id":"gm2201",
+    "gabia_id":"kcm",
+    "password":"1234",
     "name" : "pablo",
-    "password":"1234"
 }
 
     유저 가입 ResponseBody 예시
 {
     "data": {
-        "user_type": "MANAGER",
+        "user_type": "MEMBER",
         "user_id": 1,
-        "gabia_id": "gm2201",
+        "gabia_id": "kcm",
+        "name": "pablo",
+        "point": 0
+    }
+}
+*/
+
+    // 유저 가비아 아이디 조회
+    @GetMapping
+    @JsonView(JsonViews.Response.class)
+    public ResponseEntity<ResponseWrapperDto> findGabiaId(String gabiaId) {
+        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+                .data(userService.findGabiaId(gabiaId))
+                .build();
+        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK); // 200 : [OK]
+    }
+/*
+    유저 조회 GetMapping api 예시 -> domain.com/users?gabiaId=1
+
+    유저 조회 ResponseBody 예시
+{
+    "data": {
+        "user_type": "MEMBER",
+        "user_id": 1,
+        "gabia_id": "kcm",
         "name": "pablo",
         "point": 0
     }
@@ -73,12 +96,13 @@ public class UserController {
 }
 */
 
+
     // 로그인
-    @PostMapping("/{userType}/login")
+    @PostMapping("/login")
     @JsonView(JsonViews.Response.class)
-    public ResponseEntity<ResponseWrapperDto> login(@PathVariable("userType") UserType userType, @RequestBody UserDto userDto) {
+    public ResponseEntity<ResponseWrapperDto> login( @RequestBody UserDto userDto) {
         ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
-                .data(userService.login(userType, userDto))
+                .data(userService.login(userDto))
                 .build();
         return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK); // 200 : [OK]
     }
@@ -100,6 +124,8 @@ public class UserController {
         "gabia_id": "gm2201",
         "name": "pablo",
         "point": 0
+        "created_at": "2021-03-08T20:21:37.4162048",
+        "modified_at": "2021-03-08T20:21:37.4162048"
     }
 }
 */
@@ -107,9 +133,10 @@ public class UserController {
     // 정보 수정
     @PutMapping("/{userType}")
     @JsonView(JsonViews.Response.class)
-    public ResponseEntity<ResponseWrapperDto>  update(@PathVariable("userType") UserType userType, @RequestBody UserDto userDto) {
+    public ResponseEntity<ResponseWrapperDto>  update(@PathVariable("userType") UserType userType,
+                                                      @RequestBody UserUpdateDto userUpdateDtoDto) {
         ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
-                .data(userService.update(userType, userDto))
+                .data(userService.update(userType, userUpdateDtoDto))
                 .build();
         return new ResponseEntity<>(responseWrapperDto, HttpStatus.CREATED); // 201 : [Created]
     }
@@ -122,7 +149,8 @@ public class UserController {
     "user_id" : "1",
     "gabia_id":"gm2201",
     "name" : "pablo_2",
-    "password":"1234_2"
+    "originPassword":"1234_2"
+    "newPassword" : ""
 }
 
     유저 로그인 ResponseBody 예시
@@ -133,31 +161,19 @@ public class UserController {
         "gabia_id": "gm2201",
         "name": "pablo_2",
         "point": 0
+        "created_at": "2021-03-08T20:21:37.4162048",
+        "modified_at": "2021-03-08T20:21:37.4162048"
     }
 }
 */
 
     // 탈퇴 요청
-    @DeleteMapping("/{userType}")
-    @JsonView(JsonViews.Response.class)
-    public ResponseEntity<ResponseWrapperDto>  delete(@PathVariable("userType") UserType userType,
-                                                      String gabiaId, String password) {
-        userService.delete(userType, gabiaId, password);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204 : [No Content]
-    }
+//    @DeleteMapping("/{userType}")
+//    @JsonView(JsonViews.Response.class)
+//    public ResponseEntity<ResponseWrapperDto>  delete(@PathVariable("userType") UserType userType, String gabiaId) {
+//        userService.delete(userType, gabiaId);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204 : [No Content]
+//    }
+    // 탈퇴 요청 DeleteMapping api 예시 -> domain.com/users/manager?gabiaId=gm2201
 
-/*
-    탈퇴 요청 DeleteMapping api 예시 -> domain.com/users/manager?
-
-    유저 로그인 ResponseBody 예시
-{
-    "data": {
-        "user_type": "MANAGER",
-        "user_id": 1,
-        "gabia_id": "gm2201",
-        "name": "pablo_2",
-        "point": 0
-    }
-}
-*/
 }
