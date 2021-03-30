@@ -64,9 +64,12 @@ public class ChatRoomService {
         }
 
         // 채팅 방 중복 검사
-        ChatRoom chatRoom = chatRoomRepository.findByUserAndBoard(user, board);
+        ChatRoom chatRoom = chatRoomRepository.findByUserAndBoardAndSellerStatusAndBuyerStatus(user, board, ChatRoomStatus.CREATED, ChatRoomStatus.CREATED);
 
-        if(chatRoom == null){
+        if( chatRoom == null ||
+                ( chatRoom.getBuyerStatus().equals(ChatRoomStatus.DELETED) && chatRoom.getUser().getUserId().equals(chatRoomDto.getUserId()))
+                || ( chatRoom.getSellerStatus().equals(ChatRoomStatus.DELETED) && chatRoom.getUser().getUserId().equals(chatRoomDto.getUserId()))
+        ){
             chatRoom = new ChatRoom().dtoToEntity(chatRoomDto)
                                      .boardAndUserSetting(board, user)
                                      .createStatus();
@@ -100,7 +103,7 @@ public class ChatRoomService {
             // 실시간으로 해당 채티방의 구매자에게 채팅방 리스트를 최신화
             messagingTemplate.convertAndSend(
                     "/sub/chat/user/"+user.getUserId(),
-                    chatRoomRepository.loginUserChatList(user, ChatRoomStatus.DELETED,
+                    chatRoomRepository.loginUserChatListOrderByModifiedAtAsc(user, ChatRoomStatus.DELETED,
                             user.getUserId(), ChatRoomStatus.DELETED)
                             .stream()
                             .map(chatRoom1 -> new ChatRoomDto().entityToChatRoomDto(chatRoom1))
@@ -111,7 +114,7 @@ public class ChatRoomService {
             // 실시간으로 해당 채티방의 판매자에게 채팅방 리스트를 최신화
             messagingTemplate.convertAndSend(
                     "/sub/chat/user/"+board.getUser().getUserId(),
-                    chatRoomRepository.loginUserChatList(board.getUser(), ChatRoomStatus.DELETED,
+                    chatRoomRepository.loginUserChatListOrderByModifiedAtAsc(board.getUser(), ChatRoomStatus.DELETED,
                             board.getUser().getUserId(), ChatRoomStatus.DELETED)
                             .stream()
                             .map(chatRoom1 -> new ChatRoomDto().entityToChatRoomDto(chatRoom1))
@@ -177,7 +180,7 @@ public class ChatRoomService {
         }
 
         List<ChatRoom> chatRoomList =  chatRoomRepository
-                .loginUserChatList(user, ChatRoomStatus.DELETED ,user.getUserId(), ChatRoomStatus.DELETED);
+                .loginUserChatListOrderByModifiedAtAsc(user, ChatRoomStatus.DELETED ,user.getUserId(), ChatRoomStatus.DELETED);
 
         // 실시간으로 로그인된 유저에게 채팅방 리스트를 최신화
         messagingTemplate.convertAndSend("/sub/chat/user/"+user.getUserId(),
