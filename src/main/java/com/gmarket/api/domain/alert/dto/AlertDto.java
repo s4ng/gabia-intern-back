@@ -3,6 +3,7 @@ package com.gmarket.api.domain.alert.dto;
 import com.gmarket.api.domain.alert.Alert;
 import com.gmarket.api.domain.alert.enums.AlertStatus;
 import com.gmarket.api.domain.alert.enums.AlertType;
+import com.gmarket.api.domain.board.enums.BoardType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,8 @@ public class AlertDto {
 
     private LocalDateTime createdAt;
 
+    private BoardType boardType;
+
     public AlertDto entityToDto(Alert alert){
         this.alertId = alert.getAlertId();
         this.userId = alert.getUser().getUserId();
@@ -33,6 +36,7 @@ public class AlertDto {
         this.status = alert.getStatus();
         this.alertType = alert.getAlertType();
         this.createdAt = alert.getCreatedAt();
+        this.boardType =alert.getBoardType();
         return this;
     }
 

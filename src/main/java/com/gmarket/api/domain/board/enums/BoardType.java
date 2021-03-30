@@ -1,13 +1,13 @@
 package com.gmarket.api.domain.board.enums;
 
 import com.gmarket.api.domain.board.Board;
+import com.gmarket.api.domain.board.dto.BoardDto;
 import com.gmarket.api.domain.board.dto.subclass.NoticeBoardDto;
 import com.gmarket.api.domain.board.dto.subclass.PresentGoodsBoardDto;
 import com.gmarket.api.domain.board.dto.subclass.UsedGoodsBoardDto;
 import com.gmarket.api.domain.board.subclass.noticeboard.NoticeBoard;
 import com.gmarket.api.domain.board.subclass.presentgoodsboard.PresentGoodsBoard;
 import com.gmarket.api.domain.board.subclass.usedgoodsboard.UsedGoodsBoard;
-import com.gmarket.api.domain.board.dto.BoardDto;
 import lombok.Getter;
 
 @Getter

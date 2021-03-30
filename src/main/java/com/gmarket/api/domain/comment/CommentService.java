@@ -12,7 +12,7 @@ import com.gmarket.api.domain.comment.dto.CommentDto;
 import com.gmarket.api.domain.comment.enums.BoardType;
 import com.gmarket.api.domain.comment.enums.CommentStatus;
 import com.gmarket.api.domain.user.User;
-import com.gmarket.api.domain.user.UserRepositoryInterface;
+import com.gmarket.api.domain.user.UserRepository;
 import com.gmarket.api.domain.user.enums.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -29,8 +29,10 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CommentService {
 
-    private final CommentRepository CommentRepository;
-    private final UserRepositoryInterface userRepository;
+    private final CommentRepository commentRepository;
+
+    private final UserRepository userRepositoryInterface;
+
     private final BoardRepositoryInterface boardRepositoryInterface;
 
     private final AlertRepository alertRepository;
@@ -76,10 +78,30 @@ public class CommentService {
         // 댓글 알림 중복 검사
         Alert alert = alertRepository.findTop1ByUserAndAlertTypeAndBoard( board.getUser(), AlertType.COMMENT, board);
 
-        String message = "댓글 알림: "+ board.getTitle() + "("+commentRepository.countByBoard(board)+")";
+        String message = "작성하신 "+ board.getTitle() + "글에 "+commentRepository.countByBoard(board)+"번째 댓글이 달렸습니다!";
 
         if( alert == null ){
-            alert = new Alert().createAlert( board.getUser(), board, message, AlertType.COMMENT);
+            if(boardType.equals(BoardType.NOTICE)){
+                alert = new Alert().createAlert( board.getUser(),
+                        board,
+                        message,
+                        AlertType.COMMENT,
+                        com.gmarket.api.domain.board.enums.BoardType.NOTICE);
+            }
+            else if(boardType.equals(BoardType.USED)){
+                alert = new Alert().createAlert(
+                        board.getUser(),
+                        board, message,
+                        AlertType.COMMENT,
+                        com.gmarket.api.domain.board.enums.BoardType.USED);
+            }
+            else if(boardType.equals(BoardType.PRESENT)){
+                alert = new Alert().createAlert( board.getUser(),
+                        board,
+                        message,
+                        AlertType.COMMENT,
+                        com.gmarket.api.domain.board.enums.BoardType.PRESENT);
+            }
         } else {
             alert.alertUpdate(message);
         }
@@ -150,7 +172,7 @@ public class CommentService {
 
         // 댓글의 경우 해당 게시글에서 전체 보기로 보여줌
         PageRequest pageRequest =
-                PageRequest.of(0, Integer.MAX_VALUE, Sort.by( Sort.Direction.DESC, "commentId") );
+                PageRequest.of(0, Integer.MAX_VALUE, Sort.by( Sort.Direction.ASC, "commentId") );
 
         // stream 활용, java 8에서 추가된 기능으로 컬렉션
         // 배열 또는 컬렉션 인스턴스에 함수 여러 개를 조합해서 원하는 결과를 필터링하고 가공된 결과를 얻을 수 있음

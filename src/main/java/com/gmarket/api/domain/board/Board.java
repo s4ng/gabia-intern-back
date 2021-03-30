@@ -73,9 +73,4 @@ public abstract class Board extends BaseTimeEntity {
     public void addViewCount(){
         this.viewCount++;
     }
-
-    public void completeDeal(){
-        this.title = "[판매완료]"+this.title;
-    }
-
 }

@@ -7,6 +7,7 @@ import com.gmarket.api.domain.alert.enums.AlertType;
 import com.gmarket.api.domain.board.Board;
 import com.gmarket.api.domain.board.BoardRepositoryInterface;
 import com.gmarket.api.domain.board.enums.BoardStatus;
+import com.gmarket.api.domain.board.enums.BoardType;
 import com.gmarket.api.domain.board.subclass.usedgoodsboard.UsedGoodsBoard;
 import com.gmarket.api.domain.pricesuggestion.dto.PriceSuggestionDto;
 import com.gmarket.api.domain.pricesuggestion.enums.PriceSuggestionStatus;
@@ -78,7 +79,7 @@ public class PriceSuggestionService {
         // 가격 제안 알림 생성
         String message = "가격제안: "+board.getTitle()+ "\n제시금액: "+ priceSuggestionDto.getSuggestionPrice();
 
-        Alert alert = new Alert().createAlert(board.getUser(), board, message, AlertType.SUGGESTION);
+        Alert alert = new Alert().createAlert(board.getUser(), board, message, AlertType.SUGGESTION, BoardType.USED);
 
         alertRepository.save(alert); // 가격 제안 알림 저장
 

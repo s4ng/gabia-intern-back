@@ -2,8 +2,8 @@ package com.gmarket.api.domain.alertkeyword;
 
 import com.gmarket.api.domain.alertkeyword.dto.AlertKeywordDto;
 import com.gmarket.api.domain.alertkeyword.enums.AlertKeywordStatus;
-import com.gmarket.api.domain.user.UserRepository;
 import com.gmarket.api.domain.user.User;
+import com.gmarket.api.domain.user.UserRepository;
 import com.gmarket.api.domain.user.enums.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,8 +20,7 @@ public class AlertKeywordService {
 
     private final AlertKeywordRepository alertKeywordRepository;
 
-    private final UserRepository userRepositoryInterface;
-
+    private final UserRepository userRepository;
     @Transactional
     public AlertKeywordDto save(AlertKeywordDto alertKeywordDto){
 
@@ -29,24 +28,21 @@ public class AlertKeywordService {
             throw new IllegalStateException("유저 식별 값이 입력되지 않았습니다");
         }
 
-        Optional<User> optionalUser = userRepositoryInterface.findById(alertKeywordDto.getUserId());
+        User user = userRepository.findById(alertKeywordDto.getUserId())
+                .orElseThrow( () -> new IllegalStateException("존재하지 않은 회원입니다"));
 
-        if(optionalUser.isEmpty()){
-            throw new IllegalStateException("존재 하지 않는 유저 입니다");
-        }
-
-        if(optionalUser.get().getStatus().equals(UserStatus.DELETED)){
+        if(user.getStatus().equals(UserStatus.DELETED)){
             throw new IllegalStateException("이미 탈퇴한 유저입니다");
         }
 
 
-        AlertKeyword alertKeyword = alertKeywordRepository.findByUserAndKeyword(optionalUser.get(),
+        AlertKeyword alertKeyword = alertKeywordRepository.findByUserAndKeyword(user,
                 alertKeywordDto.getKeyword());
 
         if(alertKeyword == null ){
             AlertKeyword alertKeyword1 = new AlertKeyword();
             alertKeyword1.dtoToEntity(alertKeywordDto);
-            alertKeyword1.createdSetting(optionalUser.get());
+            alertKeyword1.createdSetting(user);
 
             return alertKeywordDto.entityToDto(alertKeywordRepository.save(alertKeyword1));
         }
@@ -65,7 +61,7 @@ public class AlertKeywordService {
             throw new IllegalStateException("유저 식별 값이 입력되지 않았습니다");
         }
 
-        Optional<User> optionalUser = userRepositoryInterface.findById(userId);
+        Optional<User> optionalUser = userRepository.findById(userId);
 
         if(optionalUser.isEmpty()){
             throw new IllegalStateException("존재 하지 않는 유저 입니다");

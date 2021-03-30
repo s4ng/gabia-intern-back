@@ -190,6 +190,7 @@ public class ChatMessageService {
         ChatMessageDto chatMessageDto1 = new ChatMessageDto();
         chatMessageDto1.setUserId(user.getUserId());
         chatMessageDto1.setChatRoomId(chatMessageDto.getChatRoomId());
+        chatMessageDto1.setChatMessageType(ChatMessageType.LEAVE);
         chatMessageDto1.setMessage(user.getName()+"님이 채팅방을 나가셨습니다.");
         messageCreate(chatMessageDto1);
 
@@ -239,29 +240,29 @@ public class ChatMessageService {
         chatMessageDto1.setUserId(user.getUserId());
         chatMessageDto1.setChatRoomId(chatMessageDto.getChatRoomId());
         chatMessageDto1.setChatMessageType(ChatMessageType.CLOSE);
-        chatMessageDto1.setMessage(user.getName()+"거래가 완료되었습니다.");
+        chatMessageDto1.setMessage(user.getName()+"님과의 거래가 완료되었습니다.");
         messageCreate(chatMessageDto1);
 
         Board board = chatRoom.getBoard();
         board.closedStatus();
-        board.completeDeal();
         boardRepositoryInterface.save(board);
 
         if(chatRoom.getSellerId().equals(user.getUserId())){
             chatRoom.completeDeal();
+//            chatRoom.createName();
             chatRoomRepository.save(chatRoom);
             ChatRoomDto chatRoomDto = new ChatRoomDto();
             chatRoomDto.setUserId(chatRoom.getSellerId());
             chatRoomService.chatList(chatRoomDto);
         }
 
-        if(chatRoom.getUser().getUserId().equals(user.getUserId())){
-            chatRoom.completeDeal();
-            chatRoomRepository.save(chatRoom);
-            ChatRoomDto chatRoomDto = new ChatRoomDto();
-            chatRoomDto.setUserId(chatRoom.getUser().getUserId());
-            chatRoomService.chatList(chatRoomDto);
-        }
+//        if(chatRoom.getUser().getUserId().equals(user.getUserId())){
+//            chatRoom.completeDeal();
+//            chatRoomRepository.save(chatRoom);
+//            ChatRoomDto chatRoomDto = new ChatRoomDto();
+//            chatRoomDto.setUserId(chatRoom.getUser().getUserId());
+//            chatRoomService.chatList(chatRoomDto);
+//        }
 
     }
 }

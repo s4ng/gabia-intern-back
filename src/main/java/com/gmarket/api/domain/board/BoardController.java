@@ -1,14 +1,14 @@
 package com.gmarket.api.domain.board;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.gmarket.api.domain.board.dto.BoardDto;
 import com.gmarket.api.domain.board.enums.BoardType;
+import com.gmarket.api.global.util.JsonViews;
 import com.gmarket.api.global.util.ResponseWrapperDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController // backend api
 @RequiredArgsConstructor // final -> 생성자
@@ -18,9 +18,10 @@ public class BoardController {
     private final BoardService boardService;
 
     // 게시글 저장
+
     @PostMapping("{boardType}/posts")
     public ResponseEntity<ResponseWrapperDto> save(@PathVariable("boardType") BoardType boardType,
-                                                   @RequestBody BoardDto boardDto) {
+                                                   @RequestBody BoardDto boardDto) throws InterruptedException {
         ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
                 .data(boardService.save(boardType, boardDto))
                 .build();
@@ -39,6 +40,7 @@ public class BoardController {
     "description":"description1",
     "used_goods_category":"DIGITAL",
     "used_goods_status":"USED",
+    "sell_price": 50000,
     "price_suggestion": true
 }
 
@@ -62,6 +64,7 @@ public class BoardController {
 
 
     @GetMapping("/{boardType}/posts/{boardId}") // 게시글 조회
+    @JsonView(JsonViews.Response.class)
     public ResponseEntity<ResponseWrapperDto> findId(@PathVariable("boardType") BoardType boardType,
                                                      @PathVariable("boardId") Long boardId) {
         ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
@@ -138,13 +141,14 @@ public class BoardController {
     // 게시글 삭제 DeleteMapping api 예시 -> domain.com/boards/notice/posts/1?boardId=3&userId=1
 
     // 게시판 페이지 조회
-    @GetMapping ("{boardType}/posts")
-    public ResponseEntity<ResponseWrapperDto> findPage(@PathVariable("boardType") BoardType boardType, int page) {
-        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
-                .data(boardService.findPage(boardType, page))
-                .build();
-        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK); // 200 : [OK]
-    }
+//    @GetMapping ("{boardType}/posts")
+//    @JsonView(JsonViews.Response.class)
+//    public ResponseEntity<ResponseWrapperDto> findPage(@PathVariable("boardType") BoardType boardType, int page ) {
+//        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+//                .data(boardService.findPage(boardType, page))
+//                .build();
+//        return new ResponseEntity<>(responseWrapperDto, HttpStatus.OK); // 200 : [OK]
+//    }
 /*
     게시판 페이지 조회 GetMapping api 예시 -> domain.com/boards/notice/posts?page=1
 
@@ -173,7 +177,8 @@ public class BoardController {
             "description": "description1",
             "notice_category": "EVENT"
         }
-    ]
+    ],
+    "page" : 3
 }
 */
 

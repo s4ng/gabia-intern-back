@@ -15,10 +15,12 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
     public ChatRoom findByUserAndBoard(User user, Board board);
 
+    public ChatRoom  findByUserAndBoardAndSellerStatusAndBuyerStatus(User user, Board board,  ChatRoomStatus chatRoomStatus1,  ChatRoomStatus chatRoomStatus2);
+
     public List<ChatRoom> findByUserOrSellerIdOrderByChatRoomIdDesc(User user, Long userId);
 
     @Modifying
     @Query("SELECT m FROM ChatRoom m WHERE (m.user = ?1 AND m.buyerStatus <> ?2) OR ( m.sellerId = ?3 AND m.sellerStatus <> ?4)")
-    public List<ChatRoom> loginUserChatList(User user, ChatRoomStatus userStatus,
+    public List<ChatRoom> loginUserChatListOrderByModifiedAtAsc(User user, ChatRoomStatus userStatus,
                                             Long sellerId,  ChatRoomStatus sellerStatus );
 }

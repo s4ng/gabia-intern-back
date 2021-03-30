@@ -37,10 +37,9 @@ public class AlertKeywordController {
         "alert_keyword_id": 1,
         "user_id": 1,
         "keyword":"문화상품권",
-        "status": "MODIFIED",
-        "title": "title1 수정",
-        "description": "description 수정",
-        "notice_category": "UPDATE"
+        "status": "CREATED",
+        "created_at": "2021-03-09T16:23:24.54659",
+        "modified_at": "2021-03-09T16:23:24.54659"
     }
 }
 */

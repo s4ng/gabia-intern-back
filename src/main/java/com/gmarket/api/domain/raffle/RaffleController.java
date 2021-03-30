@@ -1,6 +1,8 @@
 package com.gmarket.api.domain.raffle;
 
-import com.gmarket.api.domain.raffle.dto.RaffleRequestDto;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.gmarket.api.domain.raffle.dto.RaffleDto;
+import com.gmarket.api.global.util.JsonViews;
 import com.gmarket.api.global.util.ResponseWrapperDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,10 +16,11 @@ public class RaffleController {
 
     private final RaffleService raffleService;
 
+    @JsonView(JsonViews.Response.class)
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<ResponseWrapperDto> saveRaffle(@RequestBody RaffleRequestDto raffleRequestDto) {
+    public ResponseEntity<ResponseWrapperDto> saveRaffle(@RequestBody RaffleDto raffleDto) {
 
-        return ResponseEntity.ok(ResponseWrapperDto.builder().data(raffleService.save(raffleRequestDto)).build());
+        return ResponseEntity.ok(ResponseWrapperDto.builder().data(raffleService.save(raffleDto)).build());
     }
 
     @GetMapping(value = "/{id}")
@@ -29,8 +32,8 @@ public class RaffleController {
 
     @DeleteMapping
     public ResponseEntity<Object> deleteRaffle(
-            @RequestParam(name = "postid", required = true) Long postId,
-            @RequestParam(name = "userid", required = true) Long userId) {
+            @RequestParam(name = "postId", required = true) Long postId,
+            @RequestParam(name = "userId", required = true) Long userId) {
 
         raffleService.delete(postId, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

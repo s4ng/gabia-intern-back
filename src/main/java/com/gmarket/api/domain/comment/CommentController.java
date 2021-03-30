@@ -1,7 +1,7 @@
 package com.gmarket.api.domain.comment;
 
-import com.gmarket.api.domain.comment.enums.BoardType;
 import com.gmarket.api.domain.comment.dto.CommentDto;
+import com.gmarket.api.domain.comment.enums.BoardType;
 import com.gmarket.api.global.util.ResponseWrapperDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

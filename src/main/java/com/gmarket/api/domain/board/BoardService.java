@@ -1,11 +1,9 @@
 package com.gmarket.api.domain.board;
 
-import com.gmarket.api.domain.alert.Alert;
 import com.gmarket.api.domain.alert.AlertRepository;
-import com.gmarket.api.domain.alert.dto.AlertDto;
-import com.gmarket.api.domain.alert.enums.AlertType;
 import com.gmarket.api.domain.alertkeyword.AlertKeyword;
 import com.gmarket.api.domain.alertkeyword.AlertKeywordRepository;
+import com.gmarket.api.domain.alertkeyword.KeywordAlertService;
 import com.gmarket.api.domain.alertkeyword.enums.AlertKeywordStatus;
 import com.gmarket.api.domain.board.dto.BoardDto;
 import com.gmarket.api.domain.board.dto.subclass.NoticeBoardDto;
@@ -80,6 +78,10 @@ public class BoardService {
             throw new IllegalStateException("탈퇴 회원은 글을 작성할 수 없습니다.");
         }
 
+        user.addPoint(5);
+
+        userRepository.save(user);
+
         Board board = BoardType.boardTypeAndDtoToSubClass(boardType, boardDto);
 
         board.userSetting(user);
@@ -87,29 +89,14 @@ public class BoardService {
         boardRepositoryInterface.save(board); // 게시글 저장
 
         // 저장 상태인 알림 키워드 리스트
-        List<AlertKeyword> alertKeywordList = alertKeywordRepository.findByStatus(AlertKeywordStatus.CREATED);
-        
-        List<User> userList = new ArrayList<>();
+        List<AlertKeyword> alertKeywordList = alertKeywordRepository.findLocateKeyword(boardDto.getTitle(), AlertKeywordStatus.CREATED);
 
-        for(AlertKeyword alertKeyword: alertKeywordList){
-            // 게시글 제목 또는 게시글 내용에 키워드가 포함되어 있으면 유저 리스트에 추가
-            if(boardDto.getTitle().contains(alertKeyword.getKeyword())
-                    || boardDto.getDescription().contains(alertKeyword.getKeyword())){
-                userList.add(alertKeyword.getUser());
-            }
-        }
+        KeywordAlertService keywordAlertService =
+                new KeywordAlertService(alertRepository, messagingTemplate);
 
-        for(User alertUser: userList){
-            // 키워드 알림 웹 소켓 전송
-            messagingTemplate.convertAndSend("/sub/alert/" + boardDto.getUserId() ,
-                    new AlertDto().entityToDto(
-                            alertRepository.save(new Alert().createAlert(alertUser, board,
-                                    "키워드 알림: "+boardDto.getTitle(), AlertType.KEYWORD))
-                    )
-            );
-        }
-        // 현재 게시판이 저장될 때 알림 키워드 매칭할 효율적인 jpa 메서드 또는 쿼리 구현 미흡
-        // 추후 효율적인 방식으로 변경
+        keywordAlertService.keywordAlertFor(alertKeywordList, board);
+
+
         if(boardDto.getBoardType().equals(BoardType.PRESENT)){
             raffleService.raffleClose(board);
         }
@@ -201,6 +188,7 @@ public class BoardService {
         return BoardType.boardTypeAndDtoToSubClassDto(boardType, boardRepositoryInterface.save(board));
     }
 
+
     // 게시글 삭제 서비스
     @Transactional
     public void delete(BoardType boardType, Long boardId, Long userId){
@@ -212,9 +200,16 @@ public class BoardService {
             throw new IllegalStateException("이미 삭제된 게시글 입니다.");
         }
 
+        User user = userRepository.findById(userId)
+                .orElseThrow( () -> new IllegalStateException("존재하지 않은 회원입니다"));
+
         if(!board.getUser().getUserId().equals(userId)){
             throw new IllegalStateException("작성자만 해당 글을 삭제 할 수 있습니다");
         }
+
+        user.addPoint(-5);
+
+        userRepository.save(user);
 
         board.deletedStatus();
 
@@ -244,4 +239,5 @@ public class BoardService {
 
         return map;
     }
+
 }

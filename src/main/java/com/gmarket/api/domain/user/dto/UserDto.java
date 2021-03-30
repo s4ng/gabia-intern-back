@@ -29,6 +29,7 @@ public class UserDto { // Member, Manager 모든 정보가 일치하여 dto subc
         this.name = user.getName();
         this.gabiaId = user.getGabiaId();
         this.userType = user.getUserType();
+        this.point = user.getPoint();
         return this;
     }
 }

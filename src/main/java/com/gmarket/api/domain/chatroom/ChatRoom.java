@@ -1,6 +1,7 @@
 package com.gmarket.api.domain.chatroom;
 
 import com.gmarket.api.domain.board.Board;
+import com.gmarket.api.domain.board.subclass.usedgoodsboard.UsedGoodsBoard;
 import com.gmarket.api.domain.chatroom.dto.ChatRoomDto;
 import com.gmarket.api.domain.chatroom.enums.ChatRoomStatus;
 import com.gmarket.api.domain.user.User;
@@ -62,7 +63,12 @@ public class ChatRoom extends BaseTimeEntity {
     }
 
     public void createName(){
-        this.chatRoomName = "판매자: "+board.getUser().getName() + " / 구매자: " + user.getName() +"/게시글 번호: "+board.getBoardId();
+        UsedGoodsBoard usedGoodsBoard = (UsedGoodsBoard)this.board;
+        this.chatRoomName = this.board.getUser().getName() + "|" +
+                user.getName() +"|"+
+                board.getTitle() + "|" +
+                this.sellerStatus+"|"+
+                usedGoodsBoard.getImg();
     }
 
     public void buyerCount(){
