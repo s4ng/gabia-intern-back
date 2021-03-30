@@ -14,7 +14,7 @@ public class BoardRepository {
 
     public List<Board> findPage(Board board, int page){
         return (List<Board>) em.createQuery("SELECT m FROM "+board.getClass().getSimpleName()+
-                " m WHERE m.status != 'DELETED' ORDER BY m.boardId DESC").
+                " m WHERE m.status <> 'DELETED' ORDER BY m.boardId DESC").
                 setFirstResult((page-1)*10).setMaxResults(10).getResultList();
     }
 

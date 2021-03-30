@@ -20,4 +20,5 @@ public class NoticeBoard extends Board {
         this.noticeCategory = noticeBoardDto.getNoticeCategory();
         return this;
     }
+
 }

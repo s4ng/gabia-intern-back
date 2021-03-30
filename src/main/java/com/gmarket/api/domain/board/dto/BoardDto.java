@@ -53,7 +53,7 @@ public class BoardDto{
 
     private LocalDateTime modifiedAt;
 
-    public void entityToDto(Board board){
+    public BoardDto entityToDto(Board board){
         this.userType = board.getUserType();
         this.boardId = board.getBoardId();
         this.userId = board.getUser().getUserId();
@@ -64,6 +64,7 @@ public class BoardDto{
         this.createdAt = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
         this.viewCount = board.getViewCount();
+        return this;
     }
 
 }
