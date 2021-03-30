@@ -1,6 +1,5 @@
 package com.gmarket.api.domain.pricesuggestion;
 
-import com.gmarket.api.domain.comment.enums.BoardType;
 import com.gmarket.api.domain.pricesuggestion.dto.PriceSuggestionDto;
 import com.gmarket.api.global.util.ResponseWrapperDto;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class PriceSuggestionController {
     가격 제시 저장 RequestBody 예시
 {
     "user_id" : "2",
-    "board_id" : "1",
+    "board_id" : 1,
     "suggestion_price" : 50000
 }
 
@@ -46,7 +45,9 @@ public class PriceSuggestionController {
     }
 }
 */
-
+    
+    
+    
     // 가격 제시 거절 또는 제시 가격 변동 또는 가격 제시 취소
     @PutMapping
     public ResponseEntity<ResponseWrapperDto> update(@RequestBody PriceSuggestionDto priceSuggestionDto) {

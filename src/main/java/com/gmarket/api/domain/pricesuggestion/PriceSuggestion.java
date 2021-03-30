@@ -1,9 +1,9 @@
 package com.gmarket.api.domain.pricesuggestion;
 
+import com.gmarket.api.domain.board.Board;
 import com.gmarket.api.domain.pricesuggestion.dto.PriceSuggestionDto;
 import com.gmarket.api.domain.pricesuggestion.enums.PriceSuggestionStatus;
 import com.gmarket.api.domain.user.User;
-import com.gmarket.api.domain.board.Board;
 import com.gmarket.api.global.util.BaseTimeEntity;
 import lombok.Getter;
 
