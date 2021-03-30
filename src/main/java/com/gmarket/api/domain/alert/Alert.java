@@ -4,6 +4,7 @@ import com.gmarket.api.domain.alert.dto.AlertDto;
 import com.gmarket.api.domain.alert.enums.AlertStatus;
 import com.gmarket.api.domain.alert.enums.AlertType;
 import com.gmarket.api.domain.board.Board;
+import com.gmarket.api.domain.board.enums.BoardType;
 import com.gmarket.api.domain.user.User;
 import com.gmarket.api.global.util.BaseTimeEntity;
 import lombok.Getter;
@@ -34,20 +35,24 @@ public class Alert extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private AlertType alertType;
 
+    private BoardType boardType;
+
     public Alert dtoToEntity(AlertDto alertDto){
         this.alertId = alertDto.getAlertId();
         this.message = alertDto.getMessage();
         this.status = alertDto.getStatus();
         this.alertType = alertDto.getAlertType();
+        this.boardType = alertDto.getBoardType();
         return this;
     }
 
-    public Alert createAlert(User user, Board board, String message, AlertType alertType){
+    public Alert createAlert(User user, Board board, String message, AlertType alertType,BoardType boardType){
         this.user = user;
         this.board = board;
         this.message = message;
         this.status = AlertStatus.YET;
         this.alertType = alertType;
+        this.boardType = boardType;
         return this;
     }
 
@@ -56,4 +61,13 @@ public class Alert extends BaseTimeEntity {
         this.status = AlertStatus.YET;
     }
 
+    public Alert createAlert(User user, Board board, String message, AlertType alertType) {
+        this.user = user;
+        this.board = board;
+        this.message = message;
+        this.alertType = alertType;
+        this.boardType = board.getBoardType();
+        this.status = AlertStatus.YET;
+        return this;
+    }
 }

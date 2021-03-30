@@ -23,6 +23,10 @@ public class AlertService {
 
     public void alertYetList(AlertDto alertDto){
 
+        if(alertDto.getUserId() == null ){
+            throw new IllegalStateException( "로그인 한 이후부터 알림이 가능합니다" );
+        }
+
         User user = userRepository.findById( alertDto.getUserId() )
                 .orElseThrow( ()-> new IllegalStateException( "존재하지 않는 사용자 입니다" ));
 
