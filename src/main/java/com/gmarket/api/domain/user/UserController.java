@@ -2,7 +2,7 @@ package com.gmarket.api.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.gmarket.api.domain.user.dto.UserDto;
-import com.gmarket.api.domain.user.dto.UserUpdateDto;
+//import com.gmarket.api.domain.user.dto.UserUpdateDto;
 import com.gmarket.api.domain.user.enums.UserType;
 import com.gmarket.api.global.util.JsonViews;
 import com.gmarket.api.global.util.ResponseWrapperDto;
@@ -131,15 +131,15 @@ public class UserController {
 */
 
     // 정보 수정
-    @PutMapping("/{userType}")
-    @JsonView(JsonViews.Response.class)
-    public ResponseEntity<ResponseWrapperDto>  update(@PathVariable("userType") UserType userType,
-                                                      @RequestBody UserUpdateDto userUpdateDtoDto) {
-        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
-                .data(userService.update(userType, userUpdateDtoDto))
-                .build();
-        return new ResponseEntity<>(responseWrapperDto, HttpStatus.CREATED); // 201 : [Created]
-    }
+//    @PutMapping("/{userType}")
+//    @JsonView(JsonViews.Response.class)
+//    public ResponseEntity<ResponseWrapperDto>  update(@PathVariable("userType") UserType userType,
+//                                                      @RequestBody UserUpdateDto userUpdateDtoDto) {
+//        ResponseWrapperDto responseWrapperDto = ResponseWrapperDto.builder()
+//                .data(userService.update(userType, userUpdateDtoDto))
+//                .build();
+//        return new ResponseEntity<>(responseWrapperDto, HttpStatus.CREATED); // 201 : [Created]
+//    }
 /*
     유저 정보 수정 PutMapping api 예시 -> domain.com/users/manager
 

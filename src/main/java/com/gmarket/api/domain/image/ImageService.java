@@ -26,7 +26,8 @@ public class ImageService {
         if(osName.matches(".*Windows.*")) {
             imagePath = "C://images/";
         } else {
-            imagePath = "/root/images/";
+            // INFO : chown -R 응 이용하여 해당 폴더 권한 설정 이슈 있었음
+            imagePath = "/usr/images/";
         }
 
         File file = new File(imagePath);

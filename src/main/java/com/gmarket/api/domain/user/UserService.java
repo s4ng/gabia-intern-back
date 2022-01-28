@@ -2,7 +2,7 @@ package com.gmarket.api.domain.user;
 
 import com.gmarket.api.domain.user.dto.UserDto;
 import com.gmarket.api.domain.user.dto.UserMapper;
-import com.gmarket.api.domain.user.dto.UserUpdateDto;
+//import com.gmarket.api.domain.user.dto.UserUpdateDto;
 import com.gmarket.api.domain.user.enums.UserStatus;
 import com.gmarket.api.domain.user.enums.UserType;
 import com.gmarket.api.global.exception.EntityNotFoundException;
@@ -112,48 +112,48 @@ public class UserService {
         return UserMapper.entityToDto(user.getUserType(), user);
     }
 
-    @Transactional
-    public UserDto update(UserType userType, UserUpdateDto userUpdateDto){
-        // Dto check , join 부분과 반복되는 코드가 많아 추후 join 기능이 변경되지 않으면 해당 검증 기능 모듈화 예정
-        if (!userType.equals(userUpdateDto.getUserType())){
-            throw new IllegalStateException("유저 타입이 일치하지 않습니다");
-        }
-
-        User user = userRepository.findByGabiaIdAndStatus(userUpdateDto.getGabiaId(), UserStatus.CREATED);
-
-        if(user == null){
-            throw new IllegalStateException("존재하지 않는 id 입니다");
-        }
-
-        if(userUpdateDto.getName() != null ){
-            if (userUpdateDto.getName().length() > 20){
-                throw new IllegalStateException("닉네임은 20자을 넘길 수 없습니다");
-            }
-        }
-
-
-        if(userUpdateDto.getOriginPassword() != null){
-            if(user.getPassword().equals(userUpdateDto.getOriginPassword())){
-                throw new IllegalStateException("기존 비밀번호 정보가 다릅니다");
-            }
-
-            if ( userUpdateDto.getNewPassword().length()<4 || userUpdateDto.getNewPassword().length()>12){
-                throw new IllegalStateException("비밀번호는 최소 4자 이상 최대 12자까지 입력해야합니다");
-            }
-        }
-        else if(userUpdateDto.getOriginPassword() == null && userUpdateDto.getNewPassword() != null ){
-            throw new IllegalStateException("기존 비밀번호 정보를 입력해야 합니다");
-        }
-        else if(userUpdateDto.getOriginPassword() == null && userUpdateDto.getNewPassword() == null){
-            userUpdateDto.setNewPassword(user.getPassword());
-        }
-
-        user.update(userUpdateDto); // 정보 수정
-
-        user.userTypeInput(userType); // Dto 응답에 UserType 전달을 위함
-
-        return UserMapper.entityToDto(userType, userRepository.save(user));
-    }
+//    @Transactional
+//    public UserDto update(UserType userType, UserUpdateDto userUpdateDto){
+//        // Dto check , join 부분과 반복되는 코드가 많아 추후 join 기능이 변경되지 않으면 해당 검증 기능 모듈화 예정
+//        if (!userType.equals(userUpdateDto.getUserType())){
+//            throw new IllegalStateException("유저 타입이 일치하지 않습니다");
+//        }
+//
+//        User user = userRepository.findByGabiaIdAndStatus(userUpdateDto.getGabiaId(), UserStatus.CREATED);
+//
+//        if(user == null){
+//            throw new IllegalStateException("존재하지 않는 id 입니다");
+//        }
+//
+//        if(userUpdateDto.getName() != null ){
+//            if (userUpdateDto.getName().length() > 20){
+//                throw new IllegalStateException("닉네임은 20자을 넘길 수 없습니다");
+//            }
+//        }
+//
+//
+//        if(userUpdateDto.getOriginPassword() != null){
+//            if(user.getPassword().equals(userUpdateDto.getOriginPassword())){
+//                throw new IllegalStateException("기존 비밀번호 정보가 다릅니다");
+//            }
+//
+//            if ( userUpdateDto.getNewPassword().length()<4 || userUpdateDto.getNewPassword().length()>12){
+//                throw new IllegalStateException("비밀번호는 최소 4자 이상 최대 12자까지 입력해야합니다");
+//            }
+//        }
+//        else if(userUpdateDto.getOriginPassword() == null && userUpdateDto.getNewPassword() != null ){
+//            throw new IllegalStateException("기존 비밀번호 정보를 입력해야 합니다");
+//        }
+//        else if(userUpdateDto.getOriginPassword() == null && userUpdateDto.getNewPassword() == null){
+//            userUpdateDto.setNewPassword(user.getPassword());
+//        }
+//
+//        user.update(userUpdateDto); // 정보 수정
+//
+//        user.userTypeInput(userType); // Dto 응답에 UserType 전달을 위함
+//
+//        return UserMapper.entityToDto(userType, userRepository.save(user));
+//    }
 //
 //    @Transactional
 //    public void delete(UserType userType, String gabiaId){
